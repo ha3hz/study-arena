@@ -317,10 +317,17 @@ canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
 
     <div class="lb stg">
       <div class="lb-top">
-        <h2><span>🏆</span><span data-ar="لوحة المنافسين" data-en="Leaderboard"></span></h2>
+        <h2><span>⚡</span><span data-ar="الجلسات النشطة" data-en="Active Sessions"></span></h2>
         <div class="cb" id="cB"><span class="cd"></span><span id="cL" data-ar="متصل" data-en="Connected"></span></div>
       </div>
       <div id="lB"><div class="ldbox" id="ld"><div class="ldspin"></div><div style="font-size:13px;color:var(--t3)" data-ar="جاري التحميل..." data-en="Loading..."></div></div></div>
+    </div>
+
+    <div class="lb stg" style="margin-top:12px">
+      <div class="lb-top">
+        <h2><span>🏆</span><span data-ar="صدارة المذاكرة" data-en="Study Leaders"></span></h2>
+      </div>
+      <div id="lBHall"></div>
     </div>
 
     <div class="foot stg" data-ar="« العلم نور، والجهل ظلام »" data-en="« Knowledge is light, ignorance is darkness »"></div>
@@ -488,43 +495,91 @@ function updStats(){
   document.getElementById('sTotalH').textContent=h>0?`${h}h ${m}m`:`${m}m`;
 }
 
-/* LEADERBOARD - sorted by remaining ascending (closest to finish first) */
+/* Calculate actual study seconds for a session */
+function actualStudySec(s){
+  if(s.status==='finished') return s.total_study_seconds||(s.study_duration_minutes||25)*60;
+  if(s.current_phase==='study'&&s.ends_at) return Math.max(0,(s.study_duration_minutes||25)*60-rem(s));
+  return s.total_study_seconds||0;
+}
+
+function fmtHM(sec){const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60);return h>0?`${h}h ${m}m`:`${m}m`}
+
+/* LEADERBOARD 1: Active Sessions */
 function rLB(){
   const bx=document.getElementById('lB'),el=document.getElementById('ld');if(el)el.remove();
   const active=R.filter(s=>s.status!=='finished').sort((a,b)=>rem(a)-rem(b));
-  const finished=R.filter(s=>s.status==='finished');
-  const all=[...active,...finished];
-  if(!all.length){bx.innerHTML=`<div class="ebox"><div class="ei">📚</div><h3>${lang==='ar'?'لا يوجد أحد بعد!':'No one here yet!'}</h3><p>${lang==='ar'?'كن أول من يبدأ المذاكرة 🔥':'Be the first to start studying 🔥'}</p></div>`;return}
+  if(!active.length){bx.innerHTML=`<div class="ebox" style="padding:32px"><div class="ei" style="font-size:36px">⚡</div><h3>${lang==='ar'?'لا توجد جلسات نشطة':'No active sessions'}</h3><p>${lang==='ar'?'كن أول من يبدأ المذاكرة!':'Be the first to start!'}</p></div>`;rHall();return}
   let h='<div class="lb-list">';
-  all.forEach((s,i)=>{
+  active.forEach((s,i)=>{
     const rk=i+1,isme=s.id===mid,r=rem(s);
-    const isFin=s.status==='finished';
-    const stc=s.status==='studying'?'ss':s.status==='break'?'sb':'sf';
-    const stk=s.status==='studying'?'studying':s.status==='break'?'on_break':'finished';
-    const rc=!isFin?(rk===1?'g1':rk===2?'g2':rk===3?'g3':''):'';
-    const bg=!isFin?(rk===1?'🥇':rk===2?'🥈':rk===3?'🥉':rk):'✅';
-    const urgent=!isFin&&r>0&&r<60?'urgent':'';
-    const phase=isFin?(lang==='ar'?'أنهى':'Done'):s.current_phase==='study'?(lang==='ar'?'مذاكرة':'Study'):(lang==='ar'?'بريك':'Break');
-    const timeDisplay=isFin?fmtT((s.study_duration_minutes||25)*60):fmtT(r);
-    const timeLabel=isFin?(lang==='ar'?'إجمالي':'Total'):'';
-    h+=`<div class="lc ${rc} ${isme?'me':''} ${urgent}" data-id="${s.id}" style="animation-delay:${i*.04}s;${isFin?'opacity:.6':''}">
+    const stc=s.status==='studying'?'ss':'sb';
+    const stk=s.status==='studying'?'studying':'on_break';
+    const rc=rk===1?'g1':rk===2?'g2':rk===3?'g3':'';
+    const bg=rk===1?'🥇':rk===2?'🥈':rk===3?'🥉':rk;
+    const urgent=r>0&&r<60?'urgent':'';
+    const phase=s.current_phase==='study'?(lang==='ar'?'مذاكرة':'Study'):(lang==='ar'?'بريك':'Break');
+    h+=`<div class="lc ${rc} ${isme?'me':''} ${urgent}" data-id="${s.id}" style="animation-delay:${i*.04}s">
       <div class="rk">${bg}</div>
       <div class="ci"><div class="cn">${esc(s.name)}${isme?(lang==='ar'?' (أنت)':' (You)'):''}</div><div class="cs">${esc(s.subject)} · ${phase}</div></div>
-      <div class="cr"><div class="ct" data-sid="${s.id}">${timeDisplay}</div>${timeLabel?`<div style="font-size:9px;color:var(--t3)">${timeLabel}</div>`:`<div class="cst ${stc}"><span class="sd"></span>${t(stk)}</div>`}</div>
+      <div class="cr"><div class="ct" data-sid="${s.id}">${fmtT(r)}</div><div class="cst ${stc}"><span class="sd"></span>${t(stk)}</div></div>
+    </div>`;
+  });
+  h+='</div>';bx.innerHTML=h;
+  rHall();
+}
+
+/* LEADERBOARD 2: Hall of Fame - grouped by name, sorted by total study time */
+function rHall(){
+  const bx=document.getElementById('lBHall');if(!bx)return;
+  // Group all sessions by name and sum study time
+  const map={};
+  R.forEach(s=>{
+    const key=s.name.trim().toLowerCase();
+    if(!map[key]) map[key]={name:s.name,totalSec:0,sessions:0};
+    map[key].totalSec+=actualStudySec(s);
+    map[key].sessions++;
+  });
+  const leaders=Object.values(map).sort((a,b)=>b.totalSec-a.totalSec);
+  if(!leaders.length){bx.innerHTML=`<div class="ebox" style="padding:32px"><div class="ei" style="font-size:36px">🏆</div><h3>${lang==='ar'?'لا يوجد بيانات بعد':'No data yet'}</h3></div>`;return}
+
+  let h='<div class="lb-list">';
+  leaders.forEach((p,i)=>{
+    const rk=i+1;
+    const rc=rk===1?'g1':rk===2?'g2':rk===3?'g3':'';
+    const bg=rk===1?'🥇':rk===2?'🥈':rk===3?'🥉':rk;
+    const sessLabel=lang==='ar'?`${p.sessions} جلسة`:`${p.sessions} sessions`;
+    h+=`<div class="lc ${rc}" style="animation-delay:${i*.04}s">
+      <div class="rk">${bg}</div>
+      <div class="ci"><div class="cn">${esc(p.name)}</div><div class="cs">${sessLabel}</div></div>
+      <div class="cr"><div class="ct" style="font-size:18px">${fmtHM(p.totalSec)}</div><div style="font-size:9px;color:var(--t3);margin-top:2px">${lang==='ar'?'إجمالي':'Total'}</div></div>
     </div>`;
   });
   h+='</div>';bx.innerHTML=h;
 }
 
 /* TICK */
-function startTick(){if(tick)clearInterval(tick);tick=setInterval(()=>{
+function startTick(){if(tick)clearInterval(tick);tick=setInterval(async()=>{
+  // Auto-finish: if MY session timer reached zero
   if(mid){
     const me=R.find(r=>r.id===mid);
-    if(me){
+    if(me&&me.status!=='finished'){
       const r=rem(me);
       document.getElementById('mTim').textContent=fmtT(r);
       const totalDur=me.current_phase==='study'?(me.study_duration_minutes||25)*60:(me.break_duration_minutes||5)*60;
       updRing(r,totalDur);
+      // AUTO FINISH when timer hits zero
+      if(r<=0&&me.ends_at){
+        const studySec=me.current_phase==='study'?(me.study_duration_minutes||25)*60:0;
+        const prevTotal=me.total_study_seconds||0;
+        await sb.from(TB).update({
+          status:'finished',remaining_seconds:0,ends_at:null,last_resumed_at:null,
+          total_study_seconds:prevTotal+studySec
+        }).eq('id',mid);
+        localStorage.removeItem('sa_m');mid=null;
+        document.getElementById('myS').style.display='none';document.getElementById('fW').style.display='block';
+        toast(lang==='ar'?'انتهى الوقت! أحسنت ✅':'Time is up! Well done ✅','ts');
+        await load();return;
+      }
     }
   }
   document.querySelectorAll('.ct[data-sid]').forEach(el=>{
