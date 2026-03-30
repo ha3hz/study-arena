@@ -5,1191 +5,389 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <title>ساحة المذاكرة | Study Arena</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&family=Space+Grotesk:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Tajawal:wght@300;400;500;700;800;900&family=Outfit:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600;700&display=swap" rel="stylesheet">
 <style>
 :root {
-  --font-ar: 'IBM Plex Sans Arabic', sans-serif;
-  --font-en: 'Space Grotesk', sans-serif;
+  --font-ar: 'Tajawal', sans-serif;
+  --font-en: 'Outfit', sans-serif;
   --font-mono: 'JetBrains Mono', monospace;
-
-  /* Light Theme */
-  --bg-primary: #FAFBFC;
-  --bg-secondary: #FFFFFF;
+  --bg-body: #F7F5F0;
   --bg-card: #FFFFFF;
-  --bg-input: #F4F6F8;
-  --bg-hover: #F0F2F5;
-  --border: #E2E6EA;
-  --border-focus: #4F8CFF;
-  --text-primary: #1A1D23;
-  --text-secondary: #5A6270;
-  --text-muted: #8B919A;
-  --accent: #4F8CFF;
-  --accent-light: #E8F0FF;
-  --accent-dark: #3A6FD8;
-  --success: #22C55E;
-  --success-light: #DCFCE7;
-  --warning: #F59E0B;
-  --warning-light: #FEF3C7;
-  --danger: #EF4444;
-  --danger-light: #FEE2E2;
-  --gold: #F59E0B;
-  --silver: #94A3B8;
-  --bronze: #D97706;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.06);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.08);
-  --shadow-lg: 0 8px 30px rgba(0,0,0,0.1);
-  --shadow-glow: 0 0 20px rgba(79,140,255,0.15);
-  --radius-sm: 8px;
-  --radius-md: 12px;
-  --radius-lg: 16px;
-  --radius-xl: 20px;
-  --pulse-studying: #22C55E;
-  --pulse-break: #F59E0B;
+  --bg-card-alt: #F0EDE6;
+  --bg-input: #F0EDE6;
+  --border: #E0DCD4;
+  --border-strong: #C8C2B6;
+  --text-1: #1B1B1F;
+  --text-2: #5C5A57;
+  --text-3: #9A9690;
+  --accent: #2D5BFF;
+  --accent-soft: #EBF0FF;
+  --accent-glow: rgba(45,91,255,0.12);
+  --green: #1DB954;
+  --green-soft: #E8F8EE;
+  --orange: #E8820E;
+  --orange-soft: #FFF3E0;
+  --red: #E53935;
+  --red-soft: #FEECEB;
+  --gold: #D4A017;
+  --silver: #8A8D93;
+  --bronze: #B87333;
+  --shadow-1: 0 1px 2px rgba(27,27,31,0.04);
+  --shadow-2: 0 4px 16px rgba(27,27,31,0.06);
+  --shadow-3: 0 12px 40px rgba(27,27,31,0.08);
+  --shadow-glow: 0 0 0 1px var(--accent), 0 0 20px var(--accent-glow);
+  --radius: 14px;
+  --radius-sm: 10px;
+  --radius-lg: 20px;
+  --radius-full: 9999px;
+  --transition: 0.25s cubic-bezier(0.4,0,0.2,1);
 }
-
 [data-theme="dark"] {
-  --bg-primary: #0F1117;
-  --bg-secondary: #181B23;
-  --bg-card: #1C1F2A;
-  --bg-input: #252836;
-  --bg-hover: #2A2D3A;
-  --border: #2E3140;
-  --border-focus: #5B9AFF;
-  --text-primary: #F0F2F5;
-  --text-secondary: #9CA3AF;
-  --text-muted: #6B7280;
-  --accent: #5B9AFF;
-  --accent-light: #1E2A45;
-  --accent-dark: #7BB3FF;
-  --success: #34D399;
-  --success-light: #0D2818;
-  --warning: #FBBF24;
-  --warning-light: #2A2210;
-  --danger: #F87171;
-  --danger-light: #2A1215;
-  --shadow-sm: 0 1px 3px rgba(0,0,0,0.3);
-  --shadow-md: 0 4px 12px rgba(0,0,0,0.4);
-  --shadow-lg: 0 8px 30px rgba(0,0,0,0.5);
-  --shadow-glow: 0 0 25px rgba(91,154,255,0.2);
+  --bg-body: #111114;
+  --bg-card: #1A1A1F;
+  --bg-card-alt: #222228;
+  --bg-input: #222228;
+  --border: #2A2A30;
+  --border-strong: #3A3A42;
+  --text-1: #F2F0ED;
+  --text-2: #A3A09B;
+  --text-3: #6B6860;
+  --accent: #5B8AFF;
+  --accent-soft: #1A2340;
+  --accent-glow: rgba(91,138,255,0.2);
+  --green: #2EE06C;
+  --green-soft: #132B1A;
+  --orange: #FFB443;
+  --orange-soft: #2B2010;
+  --red: #FF6B6B;
+  --red-soft: #2B1515;
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.2);
+  --shadow-2: 0 4px 16px rgba(0,0,0,0.25);
+  --shadow-3: 0 12px 40px rgba(0,0,0,0.35);
+  --shadow-glow: 0 0 0 1px var(--accent), 0 0 24px var(--accent-glow);
 }
-
-* { margin: 0; padding: 0; box-sizing: border-box; }
-
-body {
-  font-family: var(--font-ar);
-  background: var(--bg-primary);
-  color: var(--text-primary);
-  min-height: 100vh;
-  transition: background 0.4s ease, color 0.3s ease;
-  overflow-x: hidden;
-}
-
-[dir="ltr"] body { font-family: var(--font-en); }
-[dir="ltr"] .card-name, [dir="ltr"] .stat-value { font-family: var(--font-en); }
-
-/* ===== HEADER ===== */
-.top-bar {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 20px;
-  background: var(--bg-secondary);
-  border-bottom: 1px solid var(--border);
-  position: sticky;
-  top: 0;
-  z-index: 100;
-  backdrop-filter: blur(12px);
-}
-
-.date-display {
-  font-size: 13px;
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
-.date-display .hijri {
-  font-weight: 600;
-  color: var(--text-primary);
-}
-
-.top-actions {
-  display: flex;
-  gap: 6px;
-}
-
-.icon-btn {
-  width: 38px;
-  height: 38px;
-  border-radius: var(--radius-sm);
-  border: 1px solid var(--border);
-  background: var(--bg-card);
-  color: var(--text-secondary);
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  transition: all 0.2s;
-}
-
-.icon-btn:hover {
-  background: var(--bg-hover);
-  color: var(--text-primary);
-  border-color: var(--accent);
-}
-
-/* ===== HERO ===== */
-.hero {
-  text-align: center;
-  padding: 40px 20px 24px;
-}
-
-.hero-title {
-  font-size: 28px;
-  font-weight: 700;
-  margin-bottom: 8px;
-  background: linear-gradient(135deg, var(--accent), var(--accent-dark));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-
-.hero-motivational {
-  font-size: 15px;
-  color: var(--text-muted);
-  font-weight: 400;
-}
-
-/* ===== STATS BAR ===== */
-.stats-bar {
-  display: flex;
-  gap: 12px;
-  padding: 0 20px;
-  margin-bottom: 24px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-
-.stat-pill {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 16px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-}
-
-.stat-icon {
-  font-size: 18px;
-}
-
-.stat-info {
-  display: flex;
-  flex-direction: column;
-}
-
-.stat-label {
-  font-size: 11px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.stat-value {
-  font-size: 18px;
-  font-weight: 700;
-  font-family: var(--font-mono);
-  color: var(--text-primary);
-}
-
-/* ===== JOIN FORM ===== */
-.join-section {
-  max-width: 440px;
-  margin: 0 auto 32px;
-  padding: 0 20px;
-}
-
-.join-card {
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-xl);
-  padding: 28px;
-  box-shadow: var(--shadow-md);
-}
-
-.join-card h2 {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-.field-group {
-  margin-bottom: 16px;
-}
-
-.field-label {
-  display: block;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--text-secondary);
-  margin-bottom: 6px;
-}
-
-.field-input {
-  width: 100%;
-  padding: 12px 16px;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-md);
-  background: var(--bg-input);
-  color: var(--text-primary);
-  font-size: 15px;
-  font-family: inherit;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  outline: none;
-}
-
-.field-input:focus {
-  border-color: var(--border-focus);
-  box-shadow: 0 0 0 3px var(--accent-light);
-}
-
-.field-input::placeholder {
-  color: var(--text-muted);
-}
-
-.btn-primary {
-  width: 100%;
-  padding: 14px;
-  border: none;
-  border-radius: var(--radius-md);
-  background: var(--accent);
-  color: #FFF;
-  font-size: 16px;
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  transition: all 0.2s;
-  margin-top: 8px;
-}
-
-.btn-primary:hover { background: var(--accent-dark); transform: translateY(-1px); box-shadow: var(--shadow-glow); }
-.btn-primary:active { transform: translateY(0); }
-.btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
-
-/* ===== MY SESSION PANEL ===== */
-.my-session {
-  max-width: 440px;
-  margin: 0 auto 32px;
-  padding: 0 20px;
-  display: none;
-}
-
-.session-card {
-  background: var(--bg-card);
-  border: 2px solid var(--accent);
-  border-radius: var(--radius-xl);
-  padding: 24px;
-  box-shadow: var(--shadow-glow);
-  text-align: center;
-}
-
-.session-subject {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin-bottom: 4px;
-}
-
-.session-timer {
-  font-size: 42px;
-  font-weight: 700;
-  font-family: var(--font-mono);
-  color: var(--text-primary);
-  margin: 12px 0;
-  letter-spacing: 2px;
-}
-
-.session-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 4px 14px;
-  border-radius: 20px;
-  font-size: 13px;
-  font-weight: 500;
-  margin-bottom: 20px;
-}
-
-.status-studying { background: var(--success-light); color: var(--success); }
-.status-break { background: var(--warning-light); color: var(--warning); }
-.status-finished { background: var(--danger-light); color: var(--danger); }
-
-.pulse-dot {
-  width: 8px; height: 8px;
-  border-radius: 50%;
-  animation: pulse 1.5s ease-in-out infinite;
-}
-
-.status-studying .pulse-dot { background: var(--success); }
-.status-break .pulse-dot { background: var(--warning); }
-
-@keyframes pulse {
-  0%, 100% { opacity: 1; transform: scale(1); }
-  50% { opacity: 0.4; transform: scale(0.8); }
-}
-
-.session-actions {
-  display: flex;
-  gap: 10px;
-}
-
-.btn-session {
-  flex: 1;
-  padding: 12px;
-  border: 1.5px solid var(--border);
-  border-radius: var(--radius-md);
-  font-size: 14px;
-  font-weight: 600;
-  font-family: inherit;
-  cursor: pointer;
-  transition: all 0.2s;
-  background: var(--bg-input);
-  color: var(--text-primary);
-}
-
-.btn-break { border-color: var(--warning); color: var(--warning); }
-.btn-break:hover { background: var(--warning-light); }
-.btn-resume { border-color: var(--success); color: var(--success); }
-.btn-resume:hover { background: var(--success-light); }
-.btn-finish { border-color: var(--danger); color: var(--danger); }
-.btn-finish:hover { background: var(--danger-light); }
-
-/* ===== LEADERBOARD ===== */
-.leaderboard-section {
-  max-width: 640px;
-  margin: 0 auto;
-  padding: 0 20px 60px;
-}
-
-.leaderboard-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 16px;
-}
-
-.leaderboard-title {
-  font-size: 18px;
-  font-weight: 600;
-}
-
-.sync-indicator {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 12px;
-  color: var(--text-muted);
-}
-
-.sync-dot {
-  width: 7px; height: 7px;
-  border-radius: 50%;
-  background: var(--success);
-  animation: pulse 2s infinite;
-}
-
-.sync-dot.disconnected { background: var(--danger); animation: none; }
-
-.competitor-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.competitor-card {
-  display: flex;
-  align-items: center;
-  gap: 14px;
-  padding: 16px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-lg);
-  box-shadow: var(--shadow-sm);
-  transition: all 0.3s;
-  animation: slideIn 0.3s ease-out;
-}
-
-@keyframes slideIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-.competitor-card.is-me {
-  border-color: var(--accent);
-  background: var(--accent-light);
-}
-
-.competitor-card.rank-1 { border-color: var(--gold); box-shadow: 0 0 15px rgba(245,158,11,0.15); }
-.competitor-card.rank-2 { border-color: var(--silver); }
-.competitor-card.rank-3 { border-color: var(--bronze); }
-
-.rank-badge {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 700;
-  font-size: 14px;
-  font-family: var(--font-mono);
-  flex-shrink: 0;
-  background: var(--bg-input);
-  color: var(--text-secondary);
-  border: 2px solid var(--border);
-}
-
-.rank-1 .rank-badge { background: linear-gradient(135deg, #FDE68A, #F59E0B); color: #78350F; border-color: var(--gold); }
-.rank-2 .rank-badge { background: linear-gradient(135deg, #E2E8F0, #94A3B8); color: #334155; border-color: var(--silver); }
-.rank-3 .rank-badge { background: linear-gradient(135deg, #FDE68A, #D97706); color: #78350F; border-color: var(--bronze); }
-
-.competitor-info { flex: 1; min-width: 0; }
-
-.card-name {
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text-primary);
-  margin-bottom: 2px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.card-subject {
-  font-size: 13px;
-  color: var(--text-muted);
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.competitor-meta {
-  text-align: end;
-  flex-shrink: 0;
-}
-
-.card-timer {
-  font-size: 16px;
-  font-weight: 600;
-  font-family: var(--font-mono);
-  color: var(--text-primary);
-  margin-bottom: 4px;
-}
-
-.card-status {
-  display: inline-flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 11px;
-  font-weight: 500;
-  padding: 2px 10px;
-  border-radius: 12px;
-}
-
-.card-status.studying { background: var(--success-light); color: var(--success); }
-.card-status.break { background: var(--warning-light); color: var(--warning); }
-.card-status.finished { background: var(--danger-light); color: var(--danger); }
-
-.card-status .mini-dot {
-  width: 6px; height: 6px;
-  border-radius: 50%;
-  display: inline-block;
-}
-
-.card-status.studying .mini-dot { background: var(--success); animation: pulse 1.5s infinite; }
-.card-status.break .mini-dot { background: var(--warning); animation: pulse 1.5s infinite; }
-.card-status.finished .mini-dot { background: var(--danger); }
-
-/* ===== EMPTY / LOADING STATES ===== */
-.empty-state, .loading-state {
-  text-align: center;
-  padding: 48px 20px;
-  color: var(--text-muted);
-}
-
-.empty-icon, .loading-icon {
-  font-size: 48px;
-  margin-bottom: 12px;
-  opacity: 0.6;
-}
-
-.empty-state h3 {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-secondary);
-  margin-bottom: 6px;
-}
-
-.empty-state p {
-  font-size: 13px;
-}
-
-.loading-spinner {
-  width: 32px; height: 32px;
-  border: 3px solid var(--border);
-  border-top-color: var(--accent);
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin: 0 auto 12px;
-}
-
-@keyframes spin { to { transform: rotate(360deg); } }
-
-/* ===== CONNECTION TOAST ===== */
-.toast {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%) translateY(100px);
-  padding: 10px 20px;
-  border-radius: var(--radius-md);
-  font-size: 13px;
-  font-weight: 500;
-  font-family: inherit;
-  z-index: 1000;
-  transition: transform 0.3s ease;
-  box-shadow: var(--shadow-lg);
-}
-
-.toast.show { transform: translateX(-50%) translateY(0); }
-.toast.success { background: var(--success); color: #FFF; }
-.toast.error { background: var(--danger); color: #FFF; }
-.toast.info { background: var(--accent); color: #FFF; }
-
-/* ===== RESPONSIVE ===== */
-@media (max-width: 480px) {
-  .hero-title { font-size: 22px; }
-  .session-timer { font-size: 34px; }
-  .stats-bar { gap: 8px; }
-  .stat-pill { padding: 8px 12px; }
-  .stat-value { font-size: 15px; }
-  .competitor-card { padding: 12px; gap: 10px; }
+*,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
+body{font-family:var(--font-ar);background:var(--bg-body);color:var(--text-1);min-height:100vh;line-height:1.6;transition:background var(--transition),color var(--transition);-webkit-font-smoothing:antialiased}
+[dir="ltr"] body,[dir="ltr"] .input-field,[dir="ltr"] .btn{font-family:var(--font-en)}
+body::before{content:'';position:fixed;inset:0;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");pointer-events:none;z-index:0}
+.container{max-width:720px;margin:0 auto;padding:0 16px;position:relative;z-index:1}
+
+/* TOPBAR */
+.topbar{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--border);margin-bottom:8px}
+.date-col{font-size:12.5px;color:var(--text-3);line-height:1.7}
+.date-col .hijri-line{color:var(--text-2);font-weight:700;font-size:13px}
+.topbar-actions{display:flex;gap:6px}
+.topbar-btn{width:36px;height:36px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-card);color:var(--text-2);font-size:15px;cursor:pointer;display:grid;place-items:center;transition:all var(--transition)}
+.topbar-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* HERO */
+.hero{text-align:center;padding:36px 0 28px}
+.hero-badge{display:inline-flex;align-items:center;gap:6px;padding:5px 14px;background:var(--accent-soft);color:var(--accent);font-size:12px;font-weight:700;border-radius:var(--radius-full);margin-bottom:16px;letter-spacing:.5px}
+.hero-badge .dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 1.4s ease-in-out infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.3}}
+.hero h1{font-size:32px;font-weight:900;letter-spacing:-.5px;margin-bottom:8px}
+.hero .subtitle{font-size:15px;color:var(--text-3);max-width:380px;margin:0 auto}
+
+/* STATS */
+.live-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:28px}
+.stat-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 12px;text-align:center;box-shadow:var(--shadow-1);transition:all var(--transition)}
+.stat-card:hover{box-shadow:var(--shadow-2);transform:translateY(-1px)}
+.stat-emoji{font-size:20px;margin-bottom:4px}
+.stat-number{font-family:var(--font-mono);font-size:22px;font-weight:700;line-height:1.2}
+.stat-label{font-size:11px;color:var(--text-3);font-weight:500;margin-top:2px}
+
+/* FORM */
+.form-section{margin-bottom:28px}
+.form-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:28px 24px;box-shadow:var(--shadow-2);position:relative;overflow:hidden}
+.form-card::before{content:'';position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--green))}
+.form-header{text-align:center;margin-bottom:24px}
+.form-header h2{font-size:20px;font-weight:800;margin-bottom:6px}
+.form-header p{font-size:13px;color:var(--text-3)}
+.field{margin-bottom:16px}
+.field-label{display:flex;align-items:center;gap:6px;font-size:13px;font-weight:600;color:var(--text-2);margin-bottom:7px}
+.label-icon{font-size:15px}
+.input-field{width:100%;padding:13px 16px;background:var(--bg-input);border:1.5px solid var(--border);border-radius:var(--radius-sm);color:var(--text-1);font-size:15px;font-family:inherit;outline:none;transition:all var(--transition)}
+.input-field:focus{border-color:var(--accent);box-shadow:0 0 0 3px var(--accent-glow);background:var(--bg-card)}
+.input-field::placeholder{color:var(--text-3)}
+.btn{width:100%;padding:14px;border:none;border-radius:var(--radius-sm);font-size:15px;font-weight:700;font-family:inherit;cursor:pointer;transition:all var(--transition);display:flex;align-items:center;justify-content:center;gap:8px}
+.btn-start{background:var(--accent);color:#FFF;margin-top:4px}
+.btn-start:hover{filter:brightness(1.1);transform:translateY(-1px);box-shadow:var(--shadow-glow)}
+.btn-start:active{transform:translateY(0)}
+
+/* MY SESSION */
+.my-session{margin-bottom:28px;display:none}
+.session-card{background:var(--bg-card);border:2px solid var(--accent);border-radius:var(--radius-lg);padding:28px 24px;text-align:center;box-shadow:var(--shadow-glow);position:relative}
+.my-label{position:absolute;top:-11px;left:50%;transform:translateX(-50%);background:var(--accent);color:#FFF;font-size:11px;font-weight:700;padding:3px 14px;border-radius:var(--radius-full)}
+.session-studying{font-size:14px;color:var(--text-2);margin-top:8px}
+.session-timer-display{font-family:var(--font-mono);font-size:48px;font-weight:700;letter-spacing:3px;margin:14px 0;direction:ltr}
+.session-status-pill{display:inline-flex;align-items:center;gap:6px;padding:5px 16px;border-radius:var(--radius-full);font-size:13px;font-weight:600;margin-bottom:22px}
+.pill-studying{background:var(--green-soft);color:var(--green)}
+.pill-break{background:var(--orange-soft);color:var(--orange)}
+.pill-finished{background:var(--red-soft);color:var(--red)}
+.pill-dot{width:7px;height:7px;border-radius:50%}
+.pill-studying .pill-dot{background:var(--green);animation:blink 1.4s infinite}
+.pill-break .pill-dot{background:var(--orange);animation:blink 1.4s infinite}
+.session-btns{display:flex;gap:10px}
+.btn-session{flex:1;padding:12px;border-radius:var(--radius-sm);font-size:14px;font-weight:700;font-family:inherit;cursor:pointer;transition:all var(--transition);border:1.5px solid;background:transparent}
+.btn-break-action{border-color:var(--orange);color:var(--orange)}
+.btn-break-action:hover{background:var(--orange-soft)}
+.btn-resume-action{border-color:var(--green);color:var(--green)}
+.btn-resume-action:hover{background:var(--green-soft)}
+.btn-finish-action{border-color:var(--red);color:var(--red)}
+.btn-finish-action:hover{background:var(--red-soft)}
+
+/* LEADERBOARD */
+.leaderboard{margin-bottom:48px}
+.lb-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.lb-header h2{font-size:18px;font-weight:800;display:flex;align-items:center;gap:8px}
+.sync-badge{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:var(--green-soft);color:var(--green);font-size:11px;font-weight:600;border-radius:var(--radius-full)}
+.sync-badge.offline{background:var(--red-soft);color:var(--red)}
+.sync-badge .s-dot{width:6px;height:6px;border-radius:50%;background:var(--green);animation:blink 2s infinite}
+.sync-badge.offline .s-dot{background:var(--red);animation:none}
+.lb-list{display:flex;flex-direction:column;gap:8px}
+.comp-card{display:flex;align-items:center;gap:14px;padding:14px 16px;background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);box-shadow:var(--shadow-1);transition:all .3s ease;animation:cardIn .35s ease-out both}
+@keyframes cardIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.comp-card.is-mine{border-color:var(--accent);background:var(--accent-soft);box-shadow:0 0 0 1px var(--accent),var(--shadow-2)}
+.comp-card.top-1{border-color:var(--gold)}
+.comp-card.top-2{border-color:var(--silver)}
+.comp-card.top-3{border-color:var(--bronze)}
+.comp-rank{width:38px;height:38px;border-radius:50%;display:grid;place-items:center;font-weight:800;font-size:14px;font-family:var(--font-mono);flex-shrink:0;background:var(--bg-card-alt);color:var(--text-2);border:2px solid var(--border)}
+.top-1 .comp-rank{background:linear-gradient(135deg,#FFE082,#FFB300);color:#5D4037;border-color:var(--gold)}
+.top-2 .comp-rank{background:linear-gradient(135deg,#E0E0E0,#9E9E9E);color:#37474F;border-color:var(--silver)}
+.top-3 .comp-rank{background:linear-gradient(135deg,#FFCC80,#E65100);color:#FFF;border-color:var(--bronze)}
+.comp-info{flex:1;min-width:0}
+.comp-name{font-size:15px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.comp-subject{font-size:12px;color:var(--text-3);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;margin-top:1px}
+.comp-right{text-align:end;flex-shrink:0}
+.comp-time{font-family:var(--font-mono);font-size:16px;font-weight:700;direction:ltr;display:inline-block}
+.comp-status{display:inline-flex;align-items:center;gap:4px;font-size:11px;font-weight:600;padding:2px 9px;border-radius:var(--radius-full);margin-top:4px}
+.c-studying{background:var(--green-soft);color:var(--green)}
+.c-break{background:var(--orange-soft);color:var(--orange)}
+.c-finished{background:var(--red-soft);color:var(--red)}
+.c-dot{width:5px;height:5px;border-radius:50%;display:inline-block}
+.c-studying .c-dot{background:var(--green);animation:blink 1.4s infinite}
+.c-break .c-dot{background:var(--orange);animation:blink 1.4s infinite}
+.c-finished .c-dot{background:var(--red)}
+
+/* EMPTY / LOADING */
+.empty-state{text-align:center;padding:52px 20px;background:var(--bg-card);border:1px dashed var(--border-strong);border-radius:var(--radius-lg)}
+.empty-state .empty-icon{font-size:44px;margin-bottom:12px}
+.empty-state h3{font-size:16px;font-weight:700;color:var(--text-2);margin-bottom:4px}
+.empty-state p{font-size:13px;color:var(--text-3)}
+.loading-state{text-align:center;padding:40px}
+.spinner{width:28px;height:28px;border:3px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;margin:0 auto 10px}
+@keyframes spin{to{transform:rotate(360deg)}}
+
+/* TOAST */
+.toast{position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);padding:10px 22px;border-radius:var(--radius-full);font-size:13px;font-weight:600;font-family:inherit;z-index:9999;transition:transform .35s cubic-bezier(.34,1.56,.64,1);box-shadow:var(--shadow-3);white-space:nowrap}
+.toast.visible{transform:translateX(-50%) translateY(0)}
+.toast.t-success{background:var(--green);color:#FFF}
+.toast.t-error{background:var(--red);color:#FFF}
+.toast.t-info{background:var(--accent);color:#FFF}
+
+.motivation{text-align:center;padding:20px;font-size:13px;color:var(--text-3);font-style:italic}
+
+@media(max-width:480px){
+  .hero h1{font-size:26px}
+  .session-timer-display{font-size:38px}
+  .live-stats{gap:6px}
+  .stat-number{font-size:18px}
+  .form-card{padding:22px 18px}
+  .comp-card{padding:12px;gap:10px}
 }
 </style>
 </head>
 <body data-theme="light">
-
-<!-- TOP BAR -->
-<div class="top-bar">
-  <div class="date-display">
-    <div class="hijri" id="hijriDate"></div>
-    <div id="gregDate"></div>
+<div class="container">
+  <div class="topbar">
+    <div class="date-col">
+      <div class="hijri-line" id="hijriDate"></div>
+      <div id="gregDate"></div>
+    </div>
+    <div class="topbar-actions">
+      <button class="topbar-btn" id="btnLang" onclick="toggleLang()">EN</button>
+      <button class="topbar-btn" id="btnTheme" onclick="toggleTheme()">🌙</button>
+    </div>
   </div>
-  <div class="top-actions">
-    <button class="icon-btn" id="btnLang" title="Language" onclick="toggleLang()">EN</button>
-    <button class="icon-btn" id="btnTheme" title="Theme" onclick="toggleTheme()">🌙</button>
+  <div class="hero">
+    <div class="hero-badge"><span class="dot"></span><span data-ar="بث مباشر" data-en="LIVE"></span></div>
+    <h1 data-ar="ساحة المذاكرة" data-en="Study Arena"></h1>
+    <p class="subtitle" data-ar="ذاكر مع زملائك وتنافسوا مع بعض.. كل دقيقة تفرق!" data-en="Study with your peers and compete — every minute counts!"></p>
   </div>
+  <div class="live-stats">
+    <div class="stat-card"><div class="stat-emoji">📖</div><div class="stat-number" id="statActive">0</div><div class="stat-label" data-ar="يذاكرون الآن" data-en="Studying Now"></div></div>
+    <div class="stat-card"><div class="stat-emoji">⏱️</div><div class="stat-number" id="statTotal">0:00</div><div class="stat-label" data-ar="إجمالي اليوم" data-en="Today Total"></div></div>
+    <div class="stat-card"><div class="stat-emoji">👥</div><div class="stat-number" id="statCount">0</div><div class="stat-label" data-ar="مشارك" data-en="Joined"></div></div>
+  </div>
+  <div class="form-section" id="formSection">
+    <div class="form-card">
+      <div class="form-header">
+        <h2 data-ar="ابدأ جلسة مذاكرة" data-en="Start a Study Session"></h2>
+        <p data-ar="اكتب اسمك والمادة اللي بتذاكرها وابدأ التحدي 🔥" data-en="Enter your name, what you're studying, and start the challenge 🔥"></p>
+      </div>
+      <div class="field">
+        <label class="field-label"><span class="label-icon">👤</span><span data-ar="اسمك" data-en="Your Name"></span></label>
+        <input class="input-field" id="inputName" maxlength="30" data-ph-ar="مثال: حمدان" data-ph-en="e.g. Hamdan">
+      </div>
+      <div class="field">
+        <label class="field-label"><span class="label-icon">📚</span><span data-ar="إيش بتذاكر؟" data-en="What are you studying?"></span></label>
+        <input class="input-field" id="inputSubject" maxlength="50" data-ph-ar="مثال: الرياضيات - الفصل الثالث" data-ph-en="e.g. Math — Chapter 3">
+      </div>
+      <button class="btn btn-start" id="btnStart" onclick="startSession()"><span data-ar="🚀 ابدأ المذاكرة" data-en="🚀 Start Studying"></span></button>
+    </div>
+  </div>
+  <div class="my-session" id="mySession">
+    <div class="session-card">
+      <div class="my-label" data-ar="جلستي" data-en="My Session"></div>
+      <div class="session-studying" id="mySubject"></div>
+      <div class="session-timer-display" id="myTimer">00:00:00</div>
+      <div class="session-status-pill pill-studying" id="myPill"><span class="pill-dot"></span><span id="myPillText" data-ar="يذاكر الآن" data-en="Studying"></span></div>
+      <div class="session-btns" id="myBtns"></div>
+    </div>
+  </div>
+  <div class="leaderboard">
+    <div class="lb-header">
+      <h2><span>🏆</span><span data-ar="لوحة المنافسين" data-en="Leaderboard"></span></h2>
+      <div class="sync-badge" id="syncBadge"><span class="s-dot"></span><span id="syncLabel" data-ar="متصل" data-en="Connected"></span></div>
+    </div>
+    <div id="lbContent">
+      <div class="loading-state" id="loader"><div class="spinner"></div><div style="font-size:13px;color:var(--text-3)" data-ar="جاري التحميل..." data-en="Loading..."></div></div>
+    </div>
+  </div>
+  <div class="motivation" data-ar="« العلم نور، والجهل ظلام »" data-en="« Knowledge is light, ignorance is darkness »"></div>
 </div>
-
-<!-- HERO -->
-<div class="hero">
-  <h1 class="hero-title" data-ar="ساحة المذاكرة" data-en="Study Arena"></h1>
-  <p class="hero-motivational" data-ar="تنافس مع زملائك.. كل دقيقة تفرق!" data-en="Compete with peers — every minute counts!"></p>
-</div>
-
-<!-- STATS BAR -->
-<div class="stats-bar">
-  <div class="stat-pill">
-    <span class="stat-icon">📖</span>
-    <div class="stat-info">
-      <span class="stat-label" data-ar="يذاكرون الآن" data-en="Studying Now"></span>
-      <span class="stat-value" id="statStudying">0</span>
-    </div>
-  </div>
-  <div class="stat-pill">
-    <span class="stat-icon">⏱️</span>
-    <div class="stat-info">
-      <span class="stat-label" data-ar="إجمالي اليوم" data-en="Today's Total"></span>
-      <span class="stat-value" id="statTotal">00:00</span>
-    </div>
-  </div>
-  <div class="stat-pill">
-    <span class="stat-icon">👥</span>
-    <div class="stat-info">
-      <span class="stat-label" data-ar="المشاركون" data-en="Participants"></span>
-      <span class="stat-value" id="statParticipants">0</span>
-    </div>
-  </div>
-</div>
-
-<!-- JOIN FORM -->
-<div class="join-section" id="joinSection">
-  <div class="join-card">
-    <h2 data-ar="ابدأ جلسة مذاكرة" data-en="Start a Study Session"></h2>
-    <div class="field-group">
-      <label class="field-label" data-ar="اسمك" data-en="Your Name"></label>
-      <input class="field-input" id="inputName" maxlength="30" data-placeholder-ar="مثال: حمدان" data-placeholder-en="e.g. Hamdan">
-    </div>
-    <div class="field-group">
-      <label class="field-label" data-ar="إيش بتذاكر؟" data-en="What are you studying?"></label>
-      <input class="field-input" id="inputSubject" maxlength="50" data-placeholder-ar="مثال: الرياضيات" data-placeholder-en="e.g. Mathematics">
-    </div>
-    <button class="btn-primary" id="btnStart" onclick="startSession()" data-ar="🚀 ابدأ المذاكرة" data-en="🚀 Start Studying"></button>
-  </div>
-</div>
-
-<!-- MY SESSION PANEL -->
-<div class="my-session" id="mySession">
-  <div class="session-card">
-    <div class="session-subject" id="mySubjectDisplay"></div>
-    <div class="session-timer" id="myTimer">00:00:00</div>
-    <div class="session-status status-studying" id="myStatusBadge">
-      <span class="pulse-dot"></span>
-      <span id="myStatusText" data-ar="يذاكر الآن" data-en="Studying"></span>
-    </div>
-    <div class="session-actions" id="sessionActions">
-      <button class="btn-session btn-break" id="btnBreak" onclick="takeBreak()" data-ar="☕ بريك" data-en="☕ Break"></button>
-      <button class="btn-session btn-finish" id="btnFinish" onclick="finishSession()" data-ar="✅ إنهاء" data-en="✅ Finish"></button>
-    </div>
-  </div>
-</div>
-
-<!-- LEADERBOARD -->
-<div class="leaderboard-section">
-  <div class="leaderboard-header">
-    <h2 class="leaderboard-title" data-ar="لوحة المنافسين" data-en="Leaderboard"></h2>
-    <div class="sync-indicator">
-      <span class="sync-dot" id="syncDot"></span>
-      <span data-ar="متصل" data-en="Connected" id="syncText"></span>
-    </div>
-  </div>
-  <div id="leaderboardContent">
-    <div class="loading-state" id="loadingState">
-      <div class="loading-spinner"></div>
-      <p data-ar="جاري التحميل..." data-en="Loading..."></p>
-    </div>
-  </div>
-</div>
-
 <div class="toast" id="toast"></div>
-
-<!-- SUPABASE SDK -->
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
-
 <script>
-// =============================================
-// CONFIG — Replace with your Supabase credentials
-// =============================================
-const SUPABASE_URL = 'https://xbcvwoexywkmqnsywgok.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_publishable_73_o4LuOflMhuEh0zaJF9A_uUMDi5Uz';
-const TABLE = 'study_sessions';
+const SUPA_URL='https://jthfqynavqpzvkgwznzy.supabase.co';
+const SUPA_KEY='sb_publishable_uI_kw2bzlXrAG6qf6jgvkA_I8bjZsBL';
+const TABLE='study_sessions';
+const sb=window.supabase.createClient(SUPA_URL,SUPA_KEY);
 
-// =============================================
-// SUPABASE INIT
-// =============================================
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+let lang=localStorage.getItem('sa_lang')||'ar';
+let theme=localStorage.getItem('sa_theme')||'light';
+let sessUUID=localStorage.getItem('sa_uuid');
+let myId=localStorage.getItem('sa_active');
+let rows=[];
+let tickId=null;
 
-// =============================================
-// STATE
-// =============================================
-let currentLang = localStorage.getItem('study_lang') || 'ar';
-let currentTheme = localStorage.getItem('study_theme') || 'light';
-let sessionUUID = localStorage.getItem('study_session_uuid');
-let mySessionId = localStorage.getItem('study_active_id');
-let sessions = [];
-let timerInterval = null;
-let connected = false;
-
-// =============================================
-// i18n
-// =============================================
-const i18n = {
-  studying_now: { ar: 'يذاكر الآن', en: 'Studying' },
-  on_break: { ar: 'في بريك', en: 'On Break' },
-  finished: { ar: 'أنهى المذاكرة', en: 'Finished' },
-  empty_title: { ar: 'لا يوجد أحد بعد', en: 'No one here yet' },
-  empty_desc: { ar: 'كن أول من يبدأ المذاكرة!', en: 'Be the first to start studying!' },
-  session_started: { ar: 'بدأت جلستك! بالتوفيق 🔥', en: 'Session started! Good luck 🔥' },
-  session_resumed: { ar: 'أكمل مذاكرتك! 💪', en: 'Back to studying! 💪' },
-  break_started: { ar: 'استمتع ببريكك ☕', en: 'Enjoy your break ☕' },
-  session_ended: { ar: 'أحسنت! جلسة رائعة ✅', en: 'Well done! Great session ✅' },
-  reconnected: { ar: 'تم إعادة الاتصال', en: 'Reconnected' },
-  disconnected: { ar: 'انقطع الاتصال', en: 'Disconnected' },
-  fill_fields: { ar: 'أدخل اسمك والمادة', en: 'Enter your name and subject' },
+const L={
+  studying:{ar:'يذاكر الآن',en:'Studying'},
+  on_break:{ar:'في بريك',en:'On Break'},
+  finished:{ar:'أنهى',en:'Finished'},
+  started:{ar:'بدأت جلستك! بالتوفيق 🔥',en:'Session started! Good luck 🔥'},
+  resumed:{ar:'أكمل مذاكرتك! 💪',en:'Back to studying! 💪'},
+  broke:{ar:'استمتع ببريكك ☕',en:'Enjoy your break ☕'},
+  ended:{ar:'أحسنت! جلسة رائعة ✅',en:'Well done! Great session ✅'},
+  fill:{ar:'أدخل اسمك والمادة',en:'Enter name and subject'},
 };
+const t=k=>L[k]?.[lang]||k;
 
-function t(key) { return i18n[key]?.[currentLang] || key; }
+function uuid(){return'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g,c=>{const r=Math.random()*16|0;return(c==='x'?r:(r&0x3|0x8)).toString(16)})}
+function nowISO(){return new Date().toISOString()}
+function todayStr(){return new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Riyadh'})).toISOString().split('T')[0]}
+function liveSec(s){let t=s.total_study_seconds||0;if(s.status==='studying'&&s.last_resumed_at){t+=Math.max(0,Math.floor((Date.now()-new Date(s.last_resumed_at).getTime())/1000))}return t}
+function fmt(sec){const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60),s=Math.floor(sec%60);return h>0?`${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`:`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`}
+function fmtHM(sec){const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60);return h>0?`${h}h ${m}m`:`${m}m`}
+function esc(s){const d=document.createElement('div');d.textContent=s;return d.innerHTML}
 
-// =============================================
-// UTILITIES
-// =============================================
-function generateUUID() {
-  return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, c => {
-    const r = Math.random() * 16 | 0;
-    return (c === 'x' ? r : (r & 0x3 | 0x8)).toString(16);
+function updateDates(){
+  const now=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Riyadh'}));
+  const loc=lang==='ar'?'ar-SA':'en-US';
+  const opts={weekday:'long',year:'numeric',month:'long',day:'numeric',timeZone:'Asia/Riyadh'};
+  try{document.getElementById('hijriDate').textContent=now.toLocaleDateString(loc,{...opts,calendar:'islamic-umalqura'})}catch(e){document.getElementById('hijriDate').textContent=now.toLocaleDateString('ar-SA',{...opts,calendar:'islamic'})}
+  document.getElementById('gregDate').textContent=now.toLocaleDateString(loc,{...opts,calendar:'gregory'});
+}
+
+function applyTheme(){document.body.setAttribute('data-theme',theme);document.getElementById('btnTheme').textContent=theme==='dark'?'☀️':'🌙';localStorage.setItem('sa_theme',theme)}
+function toggleTheme(){theme=theme==='dark'?'light':'dark';applyTheme()}
+
+function applyLang(){
+  const ar=lang==='ar';
+  document.documentElement.lang=lang;
+  document.documentElement.dir=ar?'rtl':'ltr';
+  document.getElementById('btnLang').textContent=ar?'EN':'عربي';
+  localStorage.setItem('sa_lang',lang);
+  document.querySelectorAll('[data-ar]').forEach(el=>{el.textContent=ar?el.dataset.ar:el.dataset.en});
+  document.querySelectorAll('[data-ph-ar]').forEach(el=>{el.placeholder=ar?el.dataset.phAr:el.dataset.phEn});
+  updateDates();renderLB();
+}
+function toggleLang(){lang=lang==='ar'?'en':'ar';applyLang()}
+
+function toast(msg,type='t-info'){const el=document.getElementById('toast');el.textContent=msg;el.className=`toast ${type} visible`;setTimeout(()=>el.classList.remove('visible'),3000)}
+
+async function startSession(){
+  const name=document.getElementById('inputName').value.trim();
+  const subject=document.getElementById('inputSubject').value.trim();
+  if(!name||!subject){toast(t('fill'),'t-error');return}
+  if(!sessUUID){sessUUID=uuid();localStorage.setItem('sa_uuid',sessUUID)}
+  const now=nowISO();
+  const{data,error}=await sb.from(TABLE).insert({session_uuid:sessUUID,name,subject,status:'studying',started_at:now,last_resumed_at:now,total_study_seconds:0,created_date:todayStr()}).select().single();
+  if(error){toast('Error: '+error.message,'t-error');return}
+  myId=data.id;localStorage.setItem('sa_active',myId);
+  showMyPanel(data);toast(t('started'),'t-success');
+}
+
+async function takeBreak(){const me=rows.find(r=>r.id===myId);if(!me||me.status!=='studying')return;await sb.from(TABLE).update({status:'break',total_study_seconds:liveSec(me),last_resumed_at:null}).eq('id',myId);toast(t('broke'),'t-info')}
+async function resumeStudy(){await sb.from(TABLE).update({status:'studying',last_resumed_at:nowISO()}).eq('id',myId);toast(t('resumed'),'t-success')}
+async function finishSession(){const me=rows.find(r=>r.id===myId);if(!me)return;await sb.from(TABLE).update({status:'finished',total_study_seconds:liveSec(me),last_resumed_at:null}).eq('id',myId);localStorage.removeItem('sa_active');myId=null;document.getElementById('mySession').style.display='none';document.getElementById('formSection').style.display='block';toast(t('ended'),'t-success')}
+
+function showMyPanel(d){document.getElementById('formSection').style.display='none';document.getElementById('mySession').style.display='block';document.getElementById('mySubject').textContent=d.subject;updateMyUI(d)}
+function updateMyUI(d){
+  if(!d)return;
+  const pill=document.getElementById('myPill'),text=document.getElementById('myPillText'),btns=document.getElementById('myBtns'),ar=lang==='ar';
+  pill.className='session-status-pill';
+  if(d.status==='studying'){pill.classList.add('pill-studying');text.textContent=t('studying');btns.innerHTML=`<button class="btn-session btn-break-action" onclick="takeBreak()">${ar?'☕ بريك':'☕ Break'}</button><button class="btn-session btn-finish-action" onclick="finishSession()">${ar?'✅ إنهاء':'✅ Finish'}</button>`}
+  else if(d.status==='break'){pill.classList.add('pill-break');text.textContent=t('on_break');btns.innerHTML=`<button class="btn-session btn-resume-action" onclick="resumeStudy()">${ar?'📖 أكمل':'📖 Resume'}</button><button class="btn-session btn-finish-action" onclick="finishSession()">${ar?'✅ إنهاء':'✅ Finish'}</button>`}
+}
+
+function updateStats(){const active=rows.filter(r=>r.status==='studying').length;let totalSec=0;rows.forEach(r=>totalSec+=liveSec(r));document.getElementById('statActive').textContent=active;document.getElementById('statTotal').textContent=fmtHM(totalSec);document.getElementById('statCount').textContent=rows.length}
+
+function renderLB(){
+  const box=document.getElementById('lbContent');
+  const el=document.getElementById('loader');if(el)el.remove();
+  const order={studying:0,break:1,finished:2};
+  const sorted=[...rows].sort((a,b)=>{const d=(order[a.status]??3)-(order[b.status]??3);return d!==0?d:liveSec(b)-liveSec(a)});
+  if(!sorted.length){box.innerHTML=`<div class="empty-state"><div class="empty-icon">📚</div><h3>${lang==='ar'?'لا يوجد أحد بعد!':'No one here yet!'}</h3><p>${lang==='ar'?'كن أول من يبدأ المذاكرة 🔥':'Be the first to start studying 🔥'}</p></div>`;return}
+  let html='<div class="lb-list">';
+  sorted.forEach((s,i)=>{
+    const rank=i+1,isMe=s.id===myId,sec=liveSec(s);
+    const sKey=s.status==='studying'?'studying':s.status==='break'?'on_break':'finished';
+    const sClass=s.status==='studying'?'c-studying':s.status==='break'?'c-break':'c-finished';
+    let rc='';if(rank===1)rc='top-1';else if(rank===2)rc='top-2';else if(rank===3)rc='top-3';
+    const badge=rank===1?'🥇':rank===2?'🥈':rank===3?'🥉':rank;
+    html+=`<div class="comp-card ${rc} ${isMe?'is-mine':''}" data-sid="${s.id}" style="animation-delay:${i*0.05}s"><div class="comp-rank">${badge}</div><div class="comp-info"><div class="comp-name">${esc(s.name)}${isMe?(lang==='ar'?' (أنت)':' (You)'):''}</div><div class="comp-subject">${esc(s.subject)}</div></div><div class="comp-right"><div class="comp-time">${fmt(sec)}</div><div class="comp-status ${sClass}"><span class="c-dot"></span>${t(sKey)}</div></div></div>`;
+  });
+  html+='</div>';box.innerHTML=html;
+}
+
+function startTick(){if(tickId)clearInterval(tickId);tickId=setInterval(()=>{if(myId){const me=rows.find(r=>r.id===myId);if(me)document.getElementById('myTimer').textContent=fmt(liveSec(me))}document.querySelectorAll('.comp-card').forEach(card=>{const s=rows.find(r=>r.id===card.dataset.sid);if(s){const te=card.querySelector('.comp-time');if(te)te.textContent=fmt(liveSec(s))}});updateStats()},1000)}
+
+async function loadToday(){
+  const{data,error}=await sb.from(TABLE).select('*').eq('created_date',todayStr()).order('started_at',{ascending:true});
+  if(error){console.error(error);return}
+  rows=data||[];renderLB();updateStats();
+  if(myId){const me=rows.find(r=>r.id===myId);if(me&&me.status!=='finished')showMyPanel(me);else{localStorage.removeItem('sa_active');myId=null}}
+}
+
+function subscribe(){
+  sb.channel('arena-live').on('postgres_changes',{event:'*',schema:'public',table:TABLE,filter:`created_date=eq.${todayStr()}`},payload=>{
+    const{eventType,new:nr,old:or}=payload;
+    if(eventType==='INSERT'){if(!rows.find(r=>r.id===nr.id))rows.push(nr)}
+    else if(eventType==='UPDATE'){const i=rows.findIndex(r=>r.id===nr.id);if(i>=0)rows[i]=nr;else rows.push(nr);if(nr.id===myId){updateMyUI(nr);if(nr.status==='finished'){localStorage.removeItem('sa_active');myId=null;document.getElementById('mySession').style.display='none';document.getElementById('formSection').style.display='block'}}}
+    else if(eventType==='DELETE'){rows=rows.filter(r=>r.id!==(or?.id||nr?.id))}
+    renderLB();updateStats();
+  }).subscribe(status=>{
+    const badge=document.getElementById('syncBadge'),label=document.getElementById('syncLabel');
+    if(status==='SUBSCRIBED'){badge.classList.remove('offline');label.textContent=lang==='ar'?'متصل':'Connected'}
+    else if(status==='CLOSED'||status==='CHANNEL_ERROR'){badge.classList.add('offline');label.textContent=lang==='ar'?'غير متصل':'Disconnected'}
   });
 }
 
-function nowRiyadh() {
-  return new Date(new Date().toLocaleString('en-US', { timeZone: 'Asia/Riyadh' }));
+async function init(){
+  if(!sessUUID){sessUUID=uuid();localStorage.setItem('sa_uuid',sessUUID)}
+  applyTheme();applyLang();await loadToday();subscribe();startTick();setInterval(updateDates,60000);
 }
-
-function toISOWithTZ() {
-  return new Date().toISOString();
-}
-
-function formatDuration(totalSeconds) {
-  const h = Math.floor(totalSeconds / 3600);
-  const m = Math.floor((totalSeconds % 3600) / 60);
-  const s = Math.floor(totalSeconds % 60);
-  if (h > 0) return `${String(h).padStart(2,'0')}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-  return `${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
-}
-
-function formatHM(totalSeconds) {
-  const h = Math.floor(totalSeconds / 3600);
-  const m = Math.floor((totalSeconds % 3600) / 60);
-  if (h > 0) return `${h}h ${m}m`;
-  return `${m}m`;
-}
-
-function calcLiveSeconds(session) {
-  let total = session.total_study_seconds || 0;
-  if (session.status === 'studying' && session.last_resumed_at) {
-    const resumed = new Date(session.last_resumed_at).getTime();
-    const now = Date.now();
-    total += Math.max(0, Math.floor((now - resumed) / 1000));
-  }
-  return total;
-}
-
-function getTodayDate() {
-  return nowRiyadh().toISOString().split('T')[0];
-}
-
-// =============================================
-// HIJRI DATE
-// =============================================
-function updateDates() {
-  const now = nowRiyadh();
-  const gregOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', timeZone: 'Asia/Riyadh' };
-  const gregStr = now.toLocaleDateString(currentLang === 'ar' ? 'ar-SA' : 'en-US', { ...gregOptions, calendar: 'gregory' });
-
-  let hijriStr = '';
-  try {
-    hijriStr = now.toLocaleDateString(currentLang === 'ar' ? 'ar-SA' : 'en-US', {
-      ...gregOptions,
-      calendar: 'islamic-umalqura'
-    });
-  } catch(e) {
-    hijriStr = now.toLocaleDateString('ar-SA', { ...gregOptions, calendar: 'islamic' });
-  }
-
-  document.getElementById('hijriDate').textContent = hijriStr;
-  document.getElementById('gregDate').textContent = gregStr;
-}
-
-// =============================================
-// THEME & LANGUAGE
-// =============================================
-function applyTheme() {
-  document.body.setAttribute('data-theme', currentTheme);
-  document.getElementById('btnTheme').textContent = currentTheme === 'dark' ? '☀️' : '🌙';
-  localStorage.setItem('study_theme', currentTheme);
-}
-
-function toggleTheme() {
-  currentTheme = currentTheme === 'dark' ? 'light' : 'dark';
-  applyTheme();
-}
-
-function applyLang() {
-  const isAr = currentLang === 'ar';
-  document.documentElement.lang = currentLang;
-  document.documentElement.dir = isAr ? 'rtl' : 'ltr';
-  document.getElementById('btnLang').textContent = isAr ? 'EN' : 'عربي';
-  localStorage.setItem('study_lang', currentLang);
-
-  document.querySelectorAll('[data-ar]').forEach(el => {
-    el.textContent = isAr ? el.dataset.ar : el.dataset.en;
-  });
-  document.querySelectorAll('[data-placeholder-ar]').forEach(el => {
-    el.placeholder = isAr ? el.dataset.placeholderAr : el.dataset.placeholderEn;
-  });
-
-  updateDates();
-  renderLeaderboard();
-}
-
-function toggleLang() {
-  currentLang = currentLang === 'ar' ? 'en' : 'ar';
-  applyLang();
-}
-
-// =============================================
-// TOAST
-// =============================================
-function showToast(msg, type = 'info') {
-  const toast = document.getElementById('toast');
-  toast.textContent = msg;
-  toast.className = `toast ${type} show`;
-  setTimeout(() => toast.classList.remove('show'), 3000);
-}
-
-// =============================================
-// SESSION MANAGEMENT
-// =============================================
-async function startSession() {
-  const name = document.getElementById('inputName').value.trim();
-  const subject = document.getElementById('inputSubject').value.trim();
-
-  if (!name || !subject) {
-    showToast(t('fill_fields'), 'error');
-    return;
-  }
-
-  if (!sessionUUID) {
-    sessionUUID = generateUUID();
-    localStorage.setItem('study_session_uuid', sessionUUID);
-  }
-
-  const now = toISOWithTZ();
-  const { data, error } = await supabase.from(TABLE).insert({
-    session_uuid: sessionUUID,
-    name,
-    subject,
-    status: 'studying',
-    started_at: now,
-    last_resumed_at: now,
-    total_study_seconds: 0,
-    created_date: getTodayDate()
-  }).select().single();
-
-  if (error) {
-    console.error('Insert error:', error);
-    showToast('Error: ' + error.message, 'error');
-    return;
-  }
-
-  mySessionId = data.id;
-  localStorage.setItem('study_active_id', mySessionId);
-  showMySession(data);
-  showToast(t('session_started'), 'success');
-}
-
-async function takeBreak() {
-  if (!mySessionId) return;
-  const myData = sessions.find(s => s.id === mySessionId);
-  if (!myData || myData.status !== 'studying') return;
-
-  const liveSeconds = calcLiveSeconds(myData);
-
-  const { error } = await supabase.from(TABLE).update({
-    status: 'break',
-    total_study_seconds: liveSeconds,
-    last_resumed_at: null
-  }).eq('id', mySessionId);
-
-  if (!error) showToast(t('break_started'), 'info');
-}
-
-async function resumeStudy() {
-  if (!mySessionId) return;
-
-  const { error } = await supabase.from(TABLE).update({
-    status: 'studying',
-    last_resumed_at: toISOWithTZ()
-  }).eq('id', mySessionId);
-
-  if (!error) showToast(t('session_resumed'), 'success');
-}
-
-async function finishSession() {
-  if (!mySessionId) return;
-  const myData = sessions.find(s => s.id === mySessionId);
-  if (!myData) return;
-
-  const liveSeconds = calcLiveSeconds(myData);
-
-  const { error } = await supabase.from(TABLE).update({
-    status: 'finished',
-    total_study_seconds: liveSeconds,
-    last_resumed_at: null
-  }).eq('id', mySessionId);
-
-  if (!error) {
-    localStorage.removeItem('study_active_id');
-    mySessionId = null;
-    document.getElementById('mySession').style.display = 'none';
-    document.getElementById('joinSection').style.display = 'block';
-    showToast(t('session_ended'), 'success');
-  }
-}
-
-function showMySession(data) {
-  document.getElementById('joinSection').style.display = 'none';
-  document.getElementById('mySession').style.display = 'block';
-  document.getElementById('mySubjectDisplay').textContent = data.subject;
-  updateMySessionUI(data);
-}
-
-function updateMySessionUI(data) {
-  if (!data) return;
-  const badge = document.getElementById('myStatusBadge');
-  const text = document.getElementById('myStatusText');
-  const actions = document.getElementById('sessionActions');
-
-  badge.className = 'session-status';
-  if (data.status === 'studying') {
-    badge.classList.add('status-studying');
-    text.textContent = t('studying_now');
-    actions.innerHTML = `
-      <button class="btn-session btn-break" onclick="takeBreak()" data-ar="☕ بريك" data-en="☕ Break">${currentLang === 'ar' ? '☕ بريك' : '☕ Break'}</button>
-      <button class="btn-session btn-finish" onclick="finishSession()" data-ar="✅ إنهاء" data-en="✅ Finish">${currentLang === 'ar' ? '✅ إنهاء' : '✅ Finish'}</button>
-    `;
-  } else if (data.status === 'break') {
-    badge.classList.add('status-break');
-    text.textContent = t('on_break');
-    actions.innerHTML = `
-      <button class="btn-session btn-resume" onclick="resumeStudy()" data-ar="📖 أكمل" data-en="📖 Resume">${currentLang === 'ar' ? '📖 أكمل' : '📖 Resume'}</button>
-      <button class="btn-session btn-finish" onclick="finishSession()" data-ar="✅ إنهاء" data-en="✅ Finish">${currentLang === 'ar' ? '✅ إنهاء' : '✅ Finish'}</button>
-    `;
-  }
-}
-
-// =============================================
-// TIMER TICKS
-// =============================================
-function startTimerLoop() {
-  if (timerInterval) clearInterval(timerInterval);
-  timerInterval = setInterval(() => {
-    // Update my timer
-    if (mySessionId) {
-      const myData = sessions.find(s => s.id === mySessionId);
-      if (myData) {
-        const secs = calcLiveSeconds(myData);
-        document.getElementById('myTimer').textContent = formatDuration(secs);
-      }
-    }
-    // Update leaderboard timers
-    document.querySelectorAll('.competitor-card').forEach(card => {
-      const sid = card.dataset.sessionId;
-      const session = sessions.find(s => s.id === sid);
-      if (session) {
-        const timerEl = card.querySelector('.card-timer');
-        if (timerEl) timerEl.textContent = formatDuration(calcLiveSeconds(session));
-      }
-    });
-    // Update stats
-    updateStats();
-  }, 1000);
-}
-
-// =============================================
-// STATS
-// =============================================
-function updateStats() {
-  const active = sessions.filter(s => s.status === 'studying');
-  const allSessions = sessions;
-  let totalSeconds = 0;
-  allSessions.forEach(s => { totalSeconds += calcLiveSeconds(s); });
-
-  document.getElementById('statStudying').textContent = active.length;
-  document.getElementById('statTotal').textContent = formatHM(totalSeconds);
-  document.getElementById('statParticipants').textContent = allSessions.length;
-}
-
-// =============================================
-// LEADERBOARD RENDER
-// =============================================
-function renderLeaderboard() {
-  const container = document.getElementById('leaderboardContent');
-  document.getElementById('loadingState')?.remove();
-
-  // Sort: studying first, then break, then finished. Within each group: by total seconds desc
-  const statusOrder = { studying: 0, break: 1, finished: 2 };
-  const sorted = [...sessions].sort((a, b) => {
-    const sa = statusOrder[a.status] ?? 3;
-    const sb = statusOrder[b.status] ?? 3;
-    if (sa !== sb) return sa - sb;
-    return calcLiveSeconds(b) - calcLiveSeconds(a);
-  });
-
-  if (sorted.length === 0) {
-    container.innerHTML = `
-      <div class="empty-state">
-        <div class="empty-icon">📚</div>
-        <h3>${currentLang === 'ar' ? 'لا يوجد أحد بعد' : 'No one here yet'}</h3>
-        <p>${currentLang === 'ar' ? 'كن أول من يبدأ المذاكرة!' : 'Be the first to start studying!'}</p>
-      </div>
-    `;
-    return;
-  }
-
-  let html = '<div class="competitor-list">';
-  sorted.forEach((s, i) => {
-    const rank = i + 1;
-    const isMe = s.id === mySessionId;
-    const secs = calcLiveSeconds(s);
-    const statusKey = s.status === 'studying' ? 'studying_now' : s.status === 'break' ? 'on_break' : 'finished';
-    const statusClass = s.status === 'studying' ? 'studying' : s.status === 'break' ? 'break' : 'finished';
-
-    let rankClass = '';
-    if (rank === 1) rankClass = 'rank-1';
-    else if (rank === 2) rankClass = 'rank-2';
-    else if (rank === 3) rankClass = 'rank-3';
-
-    const rankEmoji = rank === 1 ? '🥇' : rank === 2 ? '🥈' : rank === 3 ? '🥉' : rank;
-
-    html += `
-      <div class="competitor-card ${rankClass} ${isMe ? 'is-me' : ''}" data-session-id="${s.id}">
-        <div class="rank-badge">${rankEmoji}</div>
-        <div class="competitor-info">
-          <div class="card-name">${escapeHtml(s.name)}</div>
-          <div class="card-subject">${escapeHtml(s.subject)}</div>
-        </div>
-        <div class="competitor-meta">
-          <div class="card-timer">${formatDuration(secs)}</div>
-          <div class="card-status ${statusClass}">
-            <span class="mini-dot"></span>
-            ${t(statusKey)}
-          </div>
-        </div>
-      </div>
-    `;
-  });
-  html += '</div>';
-  container.innerHTML = html;
-}
-
-function escapeHtml(str) {
-  const div = document.createElement('div');
-  div.textContent = str;
-  return div.innerHTML;
-}
-
-// =============================================
-// SUPABASE REALTIME
-// =============================================
-async function loadTodaySessions() {
-  const today = getTodayDate();
-  const { data, error } = await supabase
-    .from(TABLE)
-    .select('*')
-    .eq('created_date', today)
-    .order('started_at', { ascending: true });
-
-  if (error) {
-    console.error('Load error:', error);
-    return;
-  }
-
-  sessions = data || [];
-  renderLeaderboard();
-  updateStats();
-
-  // Check if we have an active session
-  if (mySessionId) {
-    const myData = sessions.find(s => s.id === mySessionId);
-    if (myData && myData.status !== 'finished') {
-      showMySession(myData);
-    } else {
-      localStorage.removeItem('study_active_id');
-      mySessionId = null;
-    }
-  }
-}
-
-function subscribeRealtime() {
-  const today = getTodayDate();
-
-  supabase.channel('study-arena')
-    .on('postgres_changes', {
-      event: '*',
-      schema: 'public',
-      table: TABLE,
-      filter: `created_date=eq.${today}`
-    }, (payload) => {
-      const { eventType, new: newRec, old: oldRec } = payload;
-
-      if (eventType === 'INSERT') {
-        const exists = sessions.find(s => s.id === newRec.id);
-        if (!exists) sessions.push(newRec);
-      } else if (eventType === 'UPDATE') {
-        const idx = sessions.findIndex(s => s.id === newRec.id);
-        if (idx >= 0) sessions[idx] = newRec;
-        else sessions.push(newRec);
-
-        // Update my session UI if it's mine
-        if (newRec.id === mySessionId) {
-          updateMySessionUI(newRec);
-          if (newRec.status === 'finished') {
-            localStorage.removeItem('study_active_id');
-            mySessionId = null;
-            document.getElementById('mySession').style.display = 'none';
-            document.getElementById('joinSection').style.display = 'block';
-          }
-        }
-      } else if (eventType === 'DELETE') {
-        sessions = sessions.filter(s => s.id !== (oldRec?.id || newRec?.id));
-      }
-
-      renderLeaderboard();
-      updateStats();
-    })
-    .subscribe((status) => {
-      const dot = document.getElementById('syncDot');
-      const text = document.getElementById('syncText');
-      if (status === 'SUBSCRIBED') {
-        connected = true;
-        dot.classList.remove('disconnected');
-        text.textContent = currentLang === 'ar' ? 'متصل' : 'Connected';
-      } else if (status === 'CLOSED' || status === 'CHANNEL_ERROR') {
-        connected = false;
-        dot.classList.add('disconnected');
-        text.textContent = currentLang === 'ar' ? 'غير متصل' : 'Disconnected';
-        showToast(t('disconnected'), 'error');
-      }
-    });
-}
-
-// =============================================
-// CLEANUP OLD SESSIONS (auto-expire after 12h)
-// =============================================
-async function cleanupStaleSessions() {
-  const cutoff = new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString();
-  await supabase.from(TABLE)
-    .update({ status: 'finished', last_resumed_at: null })
-    .lt('started_at', cutoff)
-    .neq('status', 'finished');
-}
-
-// =============================================
-// INIT
-// =============================================
-async function init() {
-  // Apply saved preferences
-  applyTheme();
-  applyLang();
-
-  // Generate session UUID if needed
-  if (!sessionUUID) {
-    sessionUUID = generateUUID();
-    localStorage.setItem('study_session_uuid', sessionUUID);
-  }
-
-  // Load data and subscribe
-  await loadTodaySessions();
-  subscribeRealtime();
-  startTimerLoop();
-  cleanupStaleSessions();
-
-  // Refresh dates every minute
-  setInterval(updateDates, 60000);
-}
-
 init();
 </script>
 </body>
