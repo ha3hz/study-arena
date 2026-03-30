@@ -278,22 +278,19 @@ canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
 
     <div class="stats stg">
       <div class="st-box"><div class="st-i">📖</div><div class="st-n" id="sA">0</div><div class="st-l" data-ar="يذاكرون الآن" data-en="Studying Now"></div></div>
-      <div class="st-box"><div class="st-i">⏱️</div><div class="st-n" id="sT">0</div><div class="st-l" data-ar="إجمالي المشاركين" data-en="Total"></div></div>
-      <div class="st-box"><div class="st-i">☕</div><div class="st-n" id="sC">0</div><div class="st-l" data-ar="في بريك" data-en="On Break"></div></div>
+      <div class="st-box"><div class="st-i">👥</div><div class="st-n" id="sT">0</div><div class="st-l" data-ar="إجمالي المشاركين" data-en="Total"></div></div>
+      <div class="st-box"><div class="st-i">⏱️</div><div class="st-n" id="sTotalH">0h</div><div class="st-l" data-ar="إجمالي الساعات" data-en="Total Hours"></div></div>
     </div>
 
     <div class="form-w stg" id="fW">
       <div class="f-card">
         <div class="f-head">
           <h2 data-ar="انضم للتحدي" data-en="Join the Challenge"></h2>
-          <p data-ar="اكتب اسمك والمادة وحدد مدة المذاكرة والبريك 🔥" data-en="Enter your name, subject, and set your timer 🔥"></p>
+          <p data-ar="اكتب اسمك والمادة وحدد مدة المذاكرة 🔥" data-en="Enter your name, subject, and set your timer 🔥"></p>
         </div>
         <div class="fld"><label class="fl"><span class="fi">👤</span><span data-ar="اسمك" data-en="Your Name"></span></label><input class="fin" id="iN" maxlength="30" data-pa="اكتب اسمك هنا" data-pe="Type your name here"></div>
         <div class="fld"><label class="fl"><span class="fi">📚</span><span data-ar="إيش بتذاكر؟" data-en="What are you studying?"></span></label><input class="fin" id="iS" maxlength="50" data-pa="أي مادة تذاكر؟" data-pe="What subject?"></div>
-        <div class="fld-row">
-          <div class="fld"><label class="fl"><span class="fi">⏱️</span><span data-ar="مدة المذاكرة (دقائق)" data-en="Study time (min)"></span></label><input class="fin" id="iStudyMin" type="number" value="25" min="1" max="300"></div>
-          <div class="fld"><label class="fl"><span class="fi">☕</span><span data-ar="مدة البريك (دقائق)" data-en="Break time (min)"></span></label><input class="fin" id="iBreakMin" type="number" value="5" min="1" max="120"></div>
-        </div>
+        <div class="fld"><label class="fl"><span class="fi">⏱️</span><span data-ar="مدة المذاكرة (دقائق)" data-en="Study time (min)"></span></label><input class="fin" id="iStudyMin" type="number" value="25" min="1" max="300"></div>
         <button class="btn-go" onclick="go()"><span data-ar="🚀 ابدأ المذاكرة" data-en="🚀 Start Studying"></span></button>
       </div>
     </div>
@@ -391,7 +388,7 @@ function updRing(remSec,totalSec){
 async function go(){
   const name=document.getElementById('iN').value.trim(),subj=document.getElementById('iS').value.trim();
   const studyMin=parseInt(document.getElementById('iStudyMin').value)||25;
-  const breakMin=parseInt(document.getElementById('iBreakMin').value)||5;
+  const breakMin=5;
   if(!name||!subj){toast(t('fill'),'te');return}
   if(!uid){uid=mkid();localStorage.setItem('sa_u',uid)}
   const now=new Date();const durSec=studyMin*60;
@@ -406,6 +403,28 @@ async function go(){
   }).select().single();
   if(error){toast('Error','te');return}
   mid=data.id;localStorage.setItem('sa_m',mid);showMe(data);toast(t('started'),'ts');
+}
+
+function showBreakInput(){
+  const a=lang==='ar';
+  const b=document.getElementById('mBt');
+  b.innerHTML=`<div style="width:100%;display:flex;gap:8px;align-items:center">
+    <input class="fin" id="brkMinInput" type="number" value="5" min="1" max="120" style="width:80px;padding:10px;text-align:center">
+    <span style="font-size:12px;color:var(--t3)">${a?'دقيقة':'min'}</span>
+    <button class="bs b-brk" onclick="doBrkWithTime()" style="flex:1">${a?'☕ ابدأ البريك':'☕ Start Break'}</button>
+    <button class="bs b-fin" onclick="updMyUI(R.find(r=>r.id===mid))" style="flex:0;padding:10px 14px">${a?'رجوع':'Back'}</button>
+  </div>`;
+}
+
+async function doBrkWithTime(){
+  const me=R.find(r=>r.id===mid);if(!me)return;
+  const brkMin=parseInt(document.getElementById('brkMinInput').value)||5;
+  const now=new Date();const dur=brkMin*60;
+  await sb.from(TB).update({
+    status:'break',current_phase:'break',remaining_seconds:dur,
+    break_duration_minutes:brkMin,
+    phase_started_at:now.toISOString(),ends_at:new Date(now.getTime()+dur*1000).toISOString(),last_resumed_at:null
+  }).eq('id',mid);toast(t('broke'),'ti');
 }
 
 async function doBrk(){
@@ -440,7 +459,7 @@ function updMyUI(d){
   if(d.status==='studying'){
     p.classList.add('sp-s');tx.textContent=t('studying');
     ph.textContent=a?'مذاكرة':'Studying';
-    b.innerHTML=`<button class="bs b-brk" onclick="doBrk()">${a?'☕ بريك':'☕ Break'}</button><button class="bs b-fin" onclick="doFin()">${a?'✅ إنهاء':'✅ Finish'}</button>`;
+    b.innerHTML=`<button class="bs b-brk" onclick="showBreakInput()">${a?'☕ بريك':'☕ Break'}</button><button class="bs b-fin" onclick="doFin()">${a?'✅ إنهاء':'✅ Finish'}</button>`;
   }else if(d.status==='break'){
     p.classList.add('sp-b');tx.textContent=t('on_break');sc.classList.add('brk');
     ph.textContent=a?'بريك':'Break';
@@ -451,30 +470,47 @@ function updMyUI(d){
 /* STATS */
 function updStats(){
   const studying=R.filter(r=>r.status==='studying').length;
-  const onBreak=R.filter(r=>r.status==='break').length;
+  const total=R.length;
+  let totalSec=0;
+  R.forEach(r=>{totalSec+=(r.total_study_seconds||0)+(r.study_duration_minutes||25)*60-(r.remaining_seconds||0)});
+  // Simple: sum all study_duration - remaining for active, + total_study_seconds for finished
+  totalSec=0;
+  R.forEach(r=>{
+    if(r.status==='finished') totalSec+=(r.study_duration_minutes||25)*60;
+    else if(r.ends_at){
+      const elapsed=Math.max(0,(r.study_duration_minutes||25)*60-rem(r));
+      totalSec+=elapsed;
+    }
+  });
+  const h=Math.floor(totalSec/3600),m=Math.floor((totalSec%3600)/60);
   document.getElementById('sA').textContent=studying;
-  document.getElementById('sT').textContent=R.filter(r=>r.status!=='finished').length;
-  document.getElementById('sC').textContent=onBreak;
+  document.getElementById('sT').textContent=total;
+  document.getElementById('sTotalH').textContent=h>0?`${h}h ${m}m`:`${m}m`;
 }
 
 /* LEADERBOARD - sorted by remaining ascending (closest to finish first) */
 function rLB(){
   const bx=document.getElementById('lB'),el=document.getElementById('ld');if(el)el.remove();
   const active=R.filter(s=>s.status!=='finished').sort((a,b)=>rem(a)-rem(b));
-  if(!active.length){bx.innerHTML=`<div class="ebox"><div class="ei">📚</div><h3>${lang==='ar'?'لا يوجد أحد بعد!':'No one here yet!'}</h3><p>${lang==='ar'?'كن أول من يبدأ المذاكرة 🔥':'Be the first to start studying 🔥'}</p></div>`;return}
+  const finished=R.filter(s=>s.status==='finished');
+  const all=[...active,...finished];
+  if(!all.length){bx.innerHTML=`<div class="ebox"><div class="ei">📚</div><h3>${lang==='ar'?'لا يوجد أحد بعد!':'No one here yet!'}</h3><p>${lang==='ar'?'كن أول من يبدأ المذاكرة 🔥':'Be the first to start studying 🔥'}</p></div>`;return}
   let h='<div class="lb-list">';
-  active.forEach((s,i)=>{
+  all.forEach((s,i)=>{
     const rk=i+1,isme=s.id===mid,r=rem(s);
-    const stc=s.status==='studying'?'ss':'sb';
-    const stk=s.status==='studying'?'studying':'on_break';
-    const rc=rk===1?'g1':rk===2?'g2':rk===3?'g3':'';
-    const bg=rk===1?'🥇':rk===2?'🥈':rk===3?'🥉':rk;
-    const urgent=r>0&&r<60?'urgent':'';
-    const phase=s.current_phase==='study'?(lang==='ar'?'مذاكرة':'Study'):(lang==='ar'?'بريك':'Break');
-    h+=`<div class="lc ${rc} ${isme?'me':''} ${urgent}" data-id="${s.id}" style="animation-delay:${i*.04}s">
+    const isFin=s.status==='finished';
+    const stc=s.status==='studying'?'ss':s.status==='break'?'sb':'sf';
+    const stk=s.status==='studying'?'studying':s.status==='break'?'on_break':'finished';
+    const rc=!isFin?(rk===1?'g1':rk===2?'g2':rk===3?'g3':''):'';
+    const bg=!isFin?(rk===1?'🥇':rk===2?'🥈':rk===3?'🥉':rk):'✅';
+    const urgent=!isFin&&r>0&&r<60?'urgent':'';
+    const phase=isFin?(lang==='ar'?'أنهى':'Done'):s.current_phase==='study'?(lang==='ar'?'مذاكرة':'Study'):(lang==='ar'?'بريك':'Break');
+    const timeDisplay=isFin?fmtT((s.study_duration_minutes||25)*60):fmtT(r);
+    const timeLabel=isFin?(lang==='ar'?'إجمالي':'Total'):'';
+    h+=`<div class="lc ${rc} ${isme?'me':''} ${urgent}" data-id="${s.id}" style="animation-delay:${i*.04}s;${isFin?'opacity:.6':''}">
       <div class="rk">${bg}</div>
       <div class="ci"><div class="cn">${esc(s.name)}${isme?(lang==='ar'?' (أنت)':' (You)'):''}</div><div class="cs">${esc(s.subject)} · ${phase}</div></div>
-      <div class="cr"><div class="ct" data-sid="${s.id}">${fmtT(r)}</div><div class="cst ${stc}"><span class="sd"></span>${t(stk)}</div></div>
+      <div class="cr"><div class="ct" data-sid="${s.id}">${timeDisplay}</div>${timeLabel?`<div style="font-size:9px;color:var(--t3)">${timeLabel}</div>`:`<div class="cst ${stc}"><span class="sd"></span>${t(stk)}</div>`}</div>
     </div>`;
   });
   h+='</div>';bx.innerHTML=h;
