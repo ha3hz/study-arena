@@ -333,23 +333,19 @@ canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
         <div style="font-size:12px;color:var(--t3);line-height:2;margin-bottom:16px;text-align:center">
           <span>2د ← 5د ← 10د ← 15د ← 20د ← 25د</span>
         </div>
-        <div style="display:flex;gap:10px">
-          <button class="btn-go" style="flex:1" onclick="startFixed()"><span data-ar="🚀 ابدأ البروتوكول" data-en="🚀 Start Protocol"></span></button>
-          <button class="btn-go" style="flex:0;background:var(--bg3);padding:16px 20px" onclick="showChoice()"><span data-ar="رجوع" data-en="Back"></span></button>
-        </div>
+        <button class="btn-go" onclick="startFixed()" style="margin-bottom:10px"><span data-ar="🚀 ابدأ البروتوكول" data-en="🚀 Start Protocol"></span></button>
+        <button class="btn-go" onclick="showChoice()" style="background:var(--bg3)"><span data-ar="← رجوع" data-en="← Back"></span></button>
       </div>
     </div>
 
     <!-- CUSTOM SESSION FORM -->
     <div id="customForm" style="display:none">
       <div class="f-card" style="margin-bottom:20px">
-        <div class="f-head"><h2 data-ar="جلسة اختيارية" data-en="Custom Session"></h2></div>
+        <div class="f-head"><h2 data-ar="⚙️ جلسة اختيارية" data-en="⚙️ Custom Session"></h2></div>
         <div class="fld"><label class="fl"><span class="fi">📚</span><span data-ar="اسم المادة" data-en="Subject"></span></label><input class="fin" id="cSubj" maxlength="50" data-pa="مثال: رياضيات" data-pe="e.g. Math"></div>
         <div class="fld"><label class="fl"><span class="fi">⏱️</span><span data-ar="الوقت بالدقائق" data-en="Time (minutes)"></span></label><input class="fin" id="cMin" type="number" value="25" min="1" max="120"></div>
-        <div style="display:flex;gap:10px">
-          <button class="btn-go" style="flex:1" onclick="startCustom()"><span data-ar="🚀 ابدأ المذاكرة" data-en="🚀 Start"></span></button>
-          <button class="btn-go" style="flex:0;background:var(--bg3);padding:16px 20px" onclick="showChoice()"><span data-ar="رجوع" data-en="Back"></span></button>
-        </div>
+        <button class="btn-go" onclick="startCustom()" style="margin-bottom:10px"><span data-ar="🚀 ابدأ المذاكرة" data-en="🚀 Start"></span></button>
+        <button class="btn-go" onclick="showChoice()" style="background:var(--bg3)"><span data-ar="← رجوع" data-en="← Back"></span></button>
       </div>
     </div>
 
