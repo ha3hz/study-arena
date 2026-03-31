@@ -134,6 +134,18 @@ canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
 .fld-row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 @media(max-width:480px){.fld-row{grid-template-columns:1fr}}
 
+/* SCIENCE TIP */
+.science-tip{display:flex;gap:12px;padding:16px;margin-top:10px;margin-bottom:8px;background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.18);border-radius:var(--rs);animation:tipIn .4s var(--ease);position:relative}
+[data-theme="light"] .science-tip{background:rgba(217,119,6,.06);border-color:rgba(217,119,6,.15)}
+@keyframes tipIn{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+.tip-icon{font-size:28px;flex-shrink:0;margin-top:2px}
+.tip-body{flex:1}
+.tip-title{font-size:14px;font-weight:800;color:var(--no);margin-bottom:6px}
+.tip-text{font-size:12.5px;color:var(--t2);line-height:1.8}
+.tip-close{position:absolute;top:10px;left:10px;width:24px;height:24px;border:none;background:transparent;color:var(--t3);font-size:14px;cursor:pointer;display:grid;place-items:center;border-radius:50%;transition:all .2s}
+[dir="ltr"] .tip-close{left:auto;right:10px}
+.tip-close:hover{background:rgba(255,255,255,.1);color:var(--t1)}
+
 .btn-go{width:100%;padding:16px;border:none;border-radius:var(--rs);background:var(--gm);color:#FFF;font-size:16px;font-weight:800;font-family:inherit;cursor:pointer;transition:all .35s var(--ease);margin-top:8px;position:relative;overflow:hidden}
 .btn-go::before{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,.15),transparent);transition:left .5s}
 .btn-go:hover{transform:translateY(-2px);box-shadow:0 8px 32px rgba(91,138,255,.35)}
@@ -306,7 +318,15 @@ canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
         </div>
         <div class="fld"><label class="fl"><span class="fi">👤</span><span data-ar="اسمك" data-en="Your Name"></span></label><input class="fin" id="iN" maxlength="30" data-pa="اكتب اسمك هنا" data-pe="Type your name here"></div>
         <div class="fld"><label class="fl"><span class="fi">📚</span><span data-ar="إيش بتذاكر؟" data-en="What are you studying?"></span></label><input class="fin" id="iS" maxlength="50" data-pa="أي مادة تذاكر؟" data-pe="What subject?"></div>
-        <div class="fld"><label class="fl"><span class="fi">⏱️</span><span data-ar="مدة المذاكرة (دقائق)" data-en="Study time (min)"></span></label><input class="fin" id="iStudyMin" type="number" value="25" min="1" max="300"></div>
+        <div class="fld"><label class="fl"><span class="fi">⏱️</span><span data-ar="مدة المذاكرة (دقائق)" data-en="Study time (min)"></span></label><input class="fin" id="iStudyMin" type="number" value="25" min="1" max="120" oninput="checkStudyLimit()"></div>
+        <div class="science-tip" id="sciTip" style="display:none">
+          <div class="tip-icon">🧠</div>
+          <div class="tip-body">
+            <div class="tip-title" data-ar="نصيحة علمية" data-en="Science-backed tip"></div>
+            <div class="tip-text" data-ar="المذاكرة المتواصلة لأكثر من ساعتين تُرهق الذاكرة العاملة وتُقلل التركيز والاستيعاب. أثبتت أبحاث جامعة كينت ستيت (2013) أن تقسيم المذاكرة إلى جلسات قصيرة (25-50 دقيقة) مع فترات راحة يُضاعف كفاءة الحفظ مقارنة بالمذاكرة المتواصلة. الحد الأقصى هنا 120 دقيقة — لكن الأفضل علمياً هو جلسات أقصر وأكثر 💡" data-en="Studying continuously for over 2 hours depletes working memory and reduces focus and retention. Research from Kent State University (2013) shows that shorter spaced sessions (25-50 min) with breaks can double long-term retention compared to marathon sessions. Max here is 120 min — but shorter sessions are scientifically proven to be more effective 💡"></div>
+          </div>
+          <button class="tip-close" onclick="closeTip()">✕</button>
+        </div>
         <button class="btn-go" onclick="go()"><span data-ar="🚀 ابدأ المذاكرة" data-en="🚀 Start Studying"></span></button>
       </div>
     </div>
@@ -409,12 +429,37 @@ function updRing(remSec,totalSec){
   const fg=document.getElementById('ringFg');if(fg)fg.style.strokeDashoffset=off;
 }
 
+let tipTimer=null;
+function checkStudyLimit(){
+  const val=parseInt(document.getElementById('iStudyMin').value)||0;
+  const tip=document.getElementById('sciTip');
+  if(val>120){
+    document.getElementById('iStudyMin').value=120;
+    showTip();
+  }else{
+    tip.style.display='none';
+  }
+}
+function showTip(){
+  const tip=document.getElementById('sciTip');
+  const a=lang==='ar';
+  tip.querySelectorAll('[data-ar]').forEach(e=>{e.textContent=a?e.dataset.ar:e.dataset.en});
+  tip.style.display='flex';
+  if(tipTimer)clearTimeout(tipTimer);
+  tipTimer=setTimeout(()=>{tip.style.display='none'},10000);
+}
+function closeTip(){
+  document.getElementById('sciTip').style.display='none';
+  if(tipTimer)clearTimeout(tipTimer);
+}
+
 /* SESSION ACTIONS */
 async function go(){
   const name=document.getElementById('iN').value.trim(),subj=document.getElementById('iS').value.trim();
-  const studyMin=parseInt(document.getElementById('iStudyMin').value)||25;
+  let studyMin=parseInt(document.getElementById('iStudyMin').value)||25;
   const breakMin=5;
   if(!name||!subj){toast(t('fill'),'te');return}
+  if(studyMin>120){studyMin=120;document.getElementById('iStudyMin').value=120;showTip();return}
   if(!uid){uid=mkid();localStorage.setItem('sa_u',uid)}
   const now=new Date();const durSec=studyMin*60;
   const endsAt=new Date(now.getTime()+durSec*1000).toISOString();
