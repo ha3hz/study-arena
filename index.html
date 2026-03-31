@@ -278,11 +278,11 @@ canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
   </div>
 
   <div class="landing-grid stg" id="landingGrid" style="animation-delay:.7s">
-    <div class="land-card coming-card">
+    <div class="land-card active-card" onclick="enterArena()">
       <div class="land-icon">📖</div>
       <h3 data-ar="ساحة المذاكرة" data-en="Study Arena"></h3>
-      <p data-ar="يتم إضافة مميزات جديدة وإتاحة الساحة قريباً" data-en="New features are being added — coming soon"></p>
-      <div class="land-soon" data-ar="قريباً 🔒" data-en="Coming Soon 🔒"></div>
+      <p data-ar="جلسات منتظمة واختيارية بمؤقت تنازلي وإحصائيات" data-en="Fixed & custom sessions with countdown timers & stats"></p>
+      <div class="land-btn" data-ar="ادخل الساحة ←" data-en="Enter Arena →"></div>
     </div>
     <div class="land-card coming-card">
       <div class="land-icon">📅</div>
@@ -301,32 +301,437 @@ canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
     </a>
   </div>
 
-  <!-- ARENA CONTENT (disabled) -->
-  <div id="arenaContent" style="display:none"></div>
+  <!-- ARENA CONTENT -->
+  <div id="arenaContent" style="display:none">
+    <div class="arena-back" onclick="backToLanding()"><span>→</span><span data-ar="الرجوع للرئيسية" data-en="Back to Home"></span></div>
+
+    <!-- SESSION TYPE CHOICE -->
+    <div id="sessionChoice">
+      <div class="landing-grid" style="grid-template-columns:repeat(2,1fr);margin-bottom:24px">
+        <div class="land-card active-card" onclick="showFixed()">
+          <div class="land-icon">🎯</div>
+          <h3 data-ar="جلسات منتظمة" data-en="Fixed Sessions"></h3>
+          <p data-ar="بروتوكول تركيز متدرج — من 2 دقيقة حتى 25 دقيقة" data-en="Progressive focus protocol — from 2 to 25 minutes"></p>
+          <div class="land-btn" data-ar="اختيار" data-en="Select"></div>
+        </div>
+        <div class="land-card active-card" onclick="showCustom()">
+          <div class="land-icon">⚙️</div>
+          <h3 data-ar="جلسات اختيارية" data-en="Custom Sessions"></h3>
+          <p data-ar="حدد المادة والوقت بنفسك" data-en="Set your own subject and time"></p>
+          <div class="land-btn" data-ar="اختيار" data-en="Select"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- FIXED SESSION CONFIRM -->
+    <div id="fixedConfirm" style="display:none">
+      <div class="f-card" style="margin-bottom:20px">
+        <div class="f-head">
+          <h2 data-ar="🎯 جلسات منتظمة" data-en="🎯 Fixed Sessions"></h2>
+          <p data-ar="بروتوكول تركيز متدرج — 6 مراحل تبدأ من 2 دقيقة وتنتهي بـ 25 دقيقة مع فترات راحة بينها" data-en="Progressive protocol — 6 stages from 2 min to 25 min with breaks"></p>
+        </div>
+        <div style="font-size:12px;color:var(--t3);line-height:2;margin-bottom:16px;text-align:center">
+          <span>2د ← 5د ← 10د ← 15د ← 20د ← 25د</span>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="btn-go" style="flex:1" onclick="startFixed()"><span data-ar="🚀 ابدأ البروتوكول" data-en="🚀 Start Protocol"></span></button>
+          <button class="btn-go" style="flex:0;background:var(--bg3);padding:16px 20px" onclick="showChoice()"><span data-ar="رجوع" data-en="Back"></span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CUSTOM SESSION FORM -->
+    <div id="customForm" style="display:none">
+      <div class="f-card" style="margin-bottom:20px">
+        <div class="f-head"><h2 data-ar="جلسة اختيارية" data-en="Custom Session"></h2></div>
+        <div class="fld"><label class="fl"><span class="fi">📚</span><span data-ar="اسم المادة" data-en="Subject"></span></label><input class="fin" id="cSubj" maxlength="50" data-pa="مثال: رياضيات" data-pe="e.g. Math"></div>
+        <div class="fld"><label class="fl"><span class="fi">⏱️</span><span data-ar="الوقت بالدقائق" data-en="Time (minutes)"></span></label><input class="fin" id="cMin" type="number" value="25" min="1" max="120"></div>
+        <div style="display:flex;gap:10px">
+          <button class="btn-go" style="flex:1" onclick="startCustom()"><span data-ar="🚀 ابدأ المذاكرة" data-en="🚀 Start"></span></button>
+          <button class="btn-go" style="flex:0;background:var(--bg3);padding:16px 20px" onclick="showChoice()"><span data-ar="رجوع" data-en="Back"></span></button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ACTIVE TIMER -->
+    <div id="timerView" style="display:none">
+      <div class="s-card" id="timerCard">
+        <div class="s-lbl" id="tLabel" data-ar="جلسة منتظمة" data-en="Fixed Session"></div>
+        <div id="tSubject" style="font-size:14px;color:var(--t2);margin-top:10px"></div>
+        <div id="tPhaseLabel" style="font-size:12px;color:var(--t3);margin-top:4px"></div>
+        <div class="timer-wrap">
+          <div class="timer-ring"><svg viewBox="0 0 200 200"><defs><linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="0%"><stop offset="0%" stop-color="var(--nb)"/><stop offset="100%" stop-color="var(--nc)"/></linearGradient></defs><circle class="ring-bg" cx="100" cy="100" r="90"/><circle class="ring-fg" id="ringFg" cx="100" cy="100" r="90" stroke-dasharray="565.48" stroke-dashoffset="0"/></svg></div>
+          <div class="timer-val" id="tDisplay">00:00</div>
+        </div>
+        <div class="s-pill sp-s" id="tPill"><span class="sp-d"></span><span id="tPillTxt"></span></div>
+        <div id="tButtons" style="display:flex;gap:10px;flex-wrap:wrap;justify-content:center"></div>
+        <div style="margin-top:12px"><label style="font-size:12px;color:var(--t3);display:flex;align-items:center;gap:6px;justify-content:center"><input type="checkbox" id="bellToggle" checked> <span data-ar="🔔 تنبيه صوتي" data-en="🔔 Sound alert"></span></label></div>
+      </div>
+    </div>
+
+    <!-- STATS -->
+    <div id="statsSection" style="margin-top:24px">
+      <div class="peak-card">
+        <div class="peak-title"><span>📊</span><span data-ar="إحصائيات المذاكرة" data-en="Study Stats"></span></div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin-top:12px">
+          <div class="st-box"><div class="st-i">⏱️</div><div class="st-n" id="statTotal">0m</div><div class="st-l" data-ar="إجمالي اليوم" data-en="Today Total"></div></div>
+          <div class="st-box"><div class="st-i">🔥</div><div class="st-n" id="statSessions">0</div><div class="st-l" data-ar="جلسات مكتملة" data-en="Completed"></div></div>
+        </div>
+      </div>
+    </div>
+  </div><!-- /arenaContent -->
 </div>
 
 <div class="toast" id="tst"></div>
 
 <script>
-/* PARTICLES */
+/* ===== PARTICLES ===== */
 (function(){const c=document.getElementById('particles'),x=c.getContext('2d');let W,H,pts=[];function resize(){W=c.width=innerWidth;H=c.height=innerHeight;pts=[];const n=Math.min(40,Math.floor(W*H/25000));for(let i=0;i<n;i++)pts.push({x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.5+.5,dx:(Math.random()-.5)*.3,dy:(Math.random()-.5)*.3,o:Math.random()*.3+.1})}function draw(){x.clearRect(0,0,W,H);const dk=document.body.getAttribute('data-theme')!=='light';pts.forEach(p=>{p.x+=p.dx;p.y+=p.dy;if(p.x<0||p.x>W)p.dx*=-1;if(p.y<0||p.y>H)p.dy*=-1;x.beginPath();x.arc(p.x,p.y,p.r,0,Math.PI*2);x.fillStyle=dk?`rgba(91,138,255,${p.o})`:`rgba(59,106,224,${p.o*.3})`;x.fill()});requestAnimationFrame(draw)}resize();draw();addEventListener('resize',resize)})();
 
+/* ===== STATE ===== */
 let lang=localStorage.getItem('sa_l')||'ar';
 let theme=localStorage.getItem('sa_t')||'dark';
+const a=()=>lang==='ar';
 
+/* ===== THEME/LANG ===== */
 function aT(){document.body.setAttribute('data-theme',theme);document.getElementById('bT').textContent=theme==='dark'?'☀️':'🌙';localStorage.setItem('sa_t',theme)}
 function tgT(){theme=theme==='dark'?'light':'dark';aT()}
-
 function aL(){
-  const a=lang==='ar';document.documentElement.lang=lang;document.documentElement.dir=a?'rtl':'ltr';
-  document.getElementById('bL').textContent=a?'EN':'عربي';localStorage.setItem('sa_l',lang);
-  document.querySelectorAll('[data-ar]').forEach(e=>{e.textContent=a?e.dataset.ar:e.dataset.en});
-  document.querySelectorAll('[data-pa]').forEach(e=>{e.placeholder=a?e.dataset.pa:e.dataset.pe});
+  document.documentElement.lang=lang;document.documentElement.dir=a()?'rtl':'ltr';
+  document.getElementById('bL').textContent=a()?'EN':'عربي';localStorage.setItem('sa_l',lang);
+  document.querySelectorAll('[data-ar]').forEach(e=>{e.textContent=a()?e.dataset.ar:e.dataset.en});
+  document.querySelectorAll('[data-pa]').forEach(e=>{e.placeholder=a()?e.dataset.pa:e.dataset.pe});
+  refreshStats();
 }
 function tgL(){lang=lang==='ar'?'en':'ar';aL()}
+function toast(m,c='ti'){const e=document.getElementById('tst');e.textContent=m;e.className=`toast ${c} v`;setTimeout(()=>e.classList.remove('v'),3000)}
 
+/* ===== NAVIGATION ===== */
+function enterArena(){
+  document.getElementById('landingGrid').style.display='none';
+  document.getElementById('arenaContent').style.display='block';
+  try{history.pushState({page:'arena'},'','#arena')}catch(e){}
+  checkResume();refreshStats();
+}
+function backToLanding(){
+  document.getElementById('arenaContent').style.display='none';
+  document.getElementById('landingGrid').style.display='grid';
+  try{history.pushState({page:'home'},'','#')}catch(e){}
+}
+function showChoice(){
+  document.getElementById('sessionChoice').style.display='block';
+  document.getElementById('customForm').style.display='none';
+  document.getElementById('fixedConfirm').style.display='none';
+  document.getElementById('timerView').style.display='none';
+}
+function showCustom(){
+  document.getElementById('sessionChoice').style.display='none';
+  document.getElementById('customForm').style.display='block';
+  document.getElementById('fixedConfirm').style.display='none';
+}
+function showFixed(){
+  document.getElementById('sessionChoice').style.display='none';
+  document.getElementById('customForm').style.display='none';
+  document.getElementById('fixedConfirm').style.display='block';
+}
+window.addEventListener('popstate',e=>{
+  if(e.state&&e.state.page==='arena'){document.getElementById('landingGrid').style.display='none';document.getElementById('arenaContent').style.display='block'}
+  else{document.getElementById('arenaContent').style.display='none';document.getElementById('landingGrid').style.display='grid'}
+});
+
+/* ===== FIXED FLOW PROTOCOL ===== */
+const PROTOCOL=[
+  {work:2,brk:5},{work:5,brk:5},{work:10,brk:8},
+  {work:15,brk:10},{work:20,brk:12},{work:25,brk:15}
+];
+
+/* ===== TIMER ENGINE ===== */
+let session=null; // {type,phase,stageIdx,subject,totalSec,endTime,paused,pausedRemain}
+let tickId=null;
+
+function fmtT(sec){
+  if(sec<=0)return'00:00';
+  const m=Math.floor(sec/60),s=sec%60;
+  return`${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+}
+
+function fmtHM(sec){const h=Math.floor(sec/3600),m=Math.floor((sec%3600)/60);return h>0?`${h}h ${m}m`:`${m}m`}
+
+function ring(pct){
+  const fg=document.getElementById('ringFg');if(!fg)return;
+  const circ=565.48;fg.style.strokeDashoffset=circ-(Math.min(pct,1)*circ);
+}
+
+function playBell(){
+  if(!document.getElementById('bellToggle').checked)return;
+  try{const ctx=new(window.AudioContext||window.webkitAudioContext)();const o=ctx.createOscillator();const g=ctx.createGain();o.connect(g);g.connect(ctx.destination);o.frequency.value=880;o.type='sine';g.gain.value=0.3;o.start();g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+0.8);o.stop(ctx.currentTime+0.8)}catch(e){}
+}
+
+function startTimer(totalSec){
+  stopTimer();
+  session.endTime=Date.now()+totalSec*1000;
+  session.paused=false;
+  session.pausedRemain=0;
+  saveSession();
+  tickId=setInterval(tickFn,500);
+  renderTimer();
+}
+
+function tickFn(){
+  if(!session||session.paused)return;
+  const remain=Math.max(0,Math.round((session.endTime-Date.now())/1000));
+  const totalDur=getCurrentPhaseDuration();
+  document.getElementById('tDisplay').textContent=fmtT(remain);
+  ring(1-remain/totalDur);
+
+  if(remain<=0){
+    playBell();
+    onPhaseEnd();
+  }
+}
+
+function getCurrentPhaseDuration(){
+  if(session.type==='fixed'){
+    const stage=PROTOCOL[session.stageIdx];
+    return session.phase==='work'?stage.work*60:stage.brk*60;
+  }else{
+    return session.phase==='work'?session.totalSec:0;
+  }
+}
+
+function stopTimer(){if(tickId){clearInterval(tickId);tickId=null}}
+
+/* ===== PHASE END LOGIC ===== */
+function onPhaseEnd(){
+  stopTimer();
+  if(session.type==='fixed'){
+    if(session.phase==='work'){
+      // Add study time to stats
+      addStudyTime(PROTOCOL[session.stageIdx].work*60);
+      // Switch to break
+      session.phase='break';
+      startTimer(PROTOCOL[session.stageIdx].brk*60);
+    }else{
+      // Break ended — move to next stage
+      session.stageIdx++;
+      if(session.stageIdx>=PROTOCOL.length){
+        // Protocol complete!
+        finishSession(true);
+        return;
+      }
+      session.phase='work';
+      startTimer(PROTOCOL[session.stageIdx].work*60);
+    }
+  }else{
+    // Custom: work ended
+    if(session.phase==='work'){
+      addStudyTime(session.totalSec);
+      finishSession(true);
+      return;
+    }
+    // Custom break ended
+    session.phase='work';
+    startTimer(session.totalSec);
+  }
+  renderTimer();
+}
+
+/* ===== RENDER TIMER UI ===== */
+function renderTimer(){
+  if(!session)return;
+  const card=document.getElementById('timerCard');
+  const pill=document.getElementById('tPill');
+  const pillTxt=document.getElementById('tPillTxt');
+  const btns=document.getElementById('tButtons');
+  const phLbl=document.getElementById('tPhaseLabel');
+  const subj=document.getElementById('tSubject');
+  const label=document.getElementById('tLabel');
+
+  label.textContent=session.type==='fixed'?(a()?'جلسة منتظمة':'Fixed Session'):(a()?'جلسة اختيارية':'Custom Session');
+  subj.textContent=session.subject||'';
+
+  card.classList.remove('brk');
+  pill.className='s-pill';
+
+  if(session.phase==='work'){
+    pill.classList.add('sp-s');
+    pillTxt.textContent=a()?'يذاكر الآن':'Studying';
+    if(session.type==='fixed'){
+      const st=PROTOCOL[session.stageIdx];
+      phLbl.textContent=a()?`المرحلة ${session.stageIdx+1}/6 — ${st.work} دقيقة`:`Stage ${session.stageIdx+1}/6 — ${st.work} min`;
+    }else{
+      phLbl.textContent=a()?`${Math.round(session.totalSec/60)} دقيقة`:`${Math.round(session.totalSec/60)} min`;
+    }
+    btns.innerHTML=`
+      <button class="bs b-brk" onclick="surpriseBreak()">${a()?'☕ بريك مفاجئ':'☕ Quick Break'}</button>
+      <button class="bs b-fin" onclick="emergencySave()">${a()?'💾 حفظ طوارئ':'💾 Emergency Save'}</button>
+      <button class="bs b-fin" onclick="finishSession(false)">${a()?'⏹️ إنهاء':'⏹️ End'}</button>`;
+  }else{
+    pill.classList.add('sp-b');card.classList.add('brk');
+    pillTxt.textContent=a()?'بريك':'Break';
+    phLbl.textContent=a()?'استرح قليلاً...':'Take a rest...';
+    btns.innerHTML=`
+      <button class="bs b-rsm" onclick="skipBreak()">${a()?'📖 تخطي البريك':'📖 Skip Break'}</button>
+      <button class="bs b-fin" onclick="finishSession(false)">${a()?'⏹️ إنهاء':'⏹️ End'}</button>`;
+  }
+}
+
+/* ===== START FIXED ===== */
+function startFixed(){
+  session={type:'fixed',phase:'work',stageIdx:0,subject:a()?'بروتوكول التركيز':'Focus Protocol',totalSec:0,endTime:0,paused:false,pausedRemain:0};
+  document.getElementById('sessionChoice').style.display='none';
+  document.getElementById('fixedConfirm').style.display='none';
+  document.getElementById('timerView').style.display='block';
+  startTimer(PROTOCOL[0].work*60);
+  renderTimer();
+}
+
+/* ===== START CUSTOM ===== */
+function startCustom(){
+  const subj=document.getElementById('cSubj').value.trim();
+  const min=parseInt(document.getElementById('cMin').value)||25;
+  if(!subj){toast(a()?'أدخل اسم المادة':'Enter subject','te');return}
+  if(min>120){document.getElementById('cMin').value=120;toast(a()?'الحد الأقصى 120 دقيقة':'Max 120 minutes','te');return}
+  session={type:'custom',phase:'work',stageIdx:0,subject:subj,totalSec:min*60,endTime:0,paused:false,pausedRemain:0};
+  document.getElementById('customForm').style.display='none';
+  document.getElementById('timerView').style.display='block';
+  startTimer(min*60);
+  renderTimer();
+}
+
+/* ===== SURPRISE BREAK (Custom) ===== */
+function surpriseBreak(){
+  if(!session)return;
+  stopTimer();
+  // Calculate studied time
+  const totalDur=getCurrentPhaseDuration();
+  const remain=Math.max(0,Math.round((session.endTime-Date.now())/1000));
+  const studied=totalDur-remain;
+  if(studied>0)addStudyTime(studied);
+
+  // Start a 5 min break
+  session.phase='break';
+  if(session.type==='fixed'){
+    startTimer(PROTOCOL[session.stageIdx].brk*60);
+  }else{
+    startTimer(5*60);
+  }
+  renderTimer();
+}
+
+/* ===== SKIP BREAK ===== */
+function skipBreak(){
+  if(!session)return;
+  stopTimer();
+  if(session.type==='fixed'){
+    session.stageIdx++;
+    if(session.stageIdx>=PROTOCOL.length){finishSession(true);return}
+    session.phase='work';
+    startTimer(PROTOCOL[session.stageIdx].work*60);
+  }else{
+    session.phase='work';
+    startTimer(session.totalSec);
+  }
+  renderTimer();
+}
+
+/* ===== EMERGENCY SAVE ===== */
+function emergencySave(){
+  if(!session)return;
+  stopTimer();
+  const totalDur=getCurrentPhaseDuration();
+  const remain=Math.max(0,Math.round((session.endTime-Date.now())/1000));
+  const studied=totalDur-remain;
+  if(studied>0&&session.phase==='work')addStudyTime(studied);
+  session.paused=true;
+  session.pausedRemain=remain;
+  saveSession();
+  toast(a()?'تم حفظ الجلسة — يمكنك الاستكمال لاحقاً 💾':'Session saved — resume later 💾','ts');
+  showChoice();
+  document.getElementById('timerView').style.display='none';
+}
+
+/* ===== FINISH SESSION ===== */
+function finishSession(completed){
+  stopTimer();
+  if(session&&session.phase==='work'&&!completed){
+    const totalDur=getCurrentPhaseDuration();
+    const remain=Math.max(0,Math.round((session.endTime-Date.now())/1000));
+    const studied=totalDur-remain;
+    if(studied>0)addStudyTime(studied);
+  }
+  if(completed)addCompletedSession();
+  session=null;
+  localStorage.removeItem('sa_session');
+  document.getElementById('timerView').style.display='none';
+  showChoice();
+  refreshStats();
+  toast(completed?(a()?'أحسنت! أكملت الجلسة ✅':'Well done! ✅'):(a()?'تم الإنهاء':'Ended'),'ts');
+}
+
+/* ===== LOCALSTORAGE STATS ===== */
+function todayKey(){return new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Riyadh'})).toISOString().split('T')[0]}
+
+function getStats(){
+  try{return JSON.parse(localStorage.getItem('sa_stats'))||{}}catch(e){return{}}
+}
+function getTodayStats(){const s=getStats();return s[todayKey()]||{totalSec:0,sessions:0}}
+function addStudyTime(sec){
+  const s=getStats();const k=todayKey();
+  if(!s[k])s[k]={totalSec:0,sessions:0};
+  s[k].totalSec+=sec;
+  localStorage.setItem('sa_stats',JSON.stringify(s));
+  refreshStats();
+}
+function addCompletedSession(){
+  const s=getStats();const k=todayKey();
+  if(!s[k])s[k]={totalSec:0,sessions:0};
+  s[k].sessions++;
+  localStorage.setItem('sa_stats',JSON.stringify(s));
+  refreshStats();
+}
+function refreshStats(){
+  const t=getTodayStats();
+  const el1=document.getElementById('statTotal');
+  const el2=document.getElementById('statSessions');
+  if(el1)el1.textContent=fmtHM(t.totalSec);
+  if(el2)el2.textContent=t.sessions;
+}
+
+/* ===== SESSION PERSISTENCE ===== */
+function saveSession(){
+  if(session)localStorage.setItem('sa_session',JSON.stringify(session));
+}
+function checkResume(){
+  const raw=localStorage.getItem('sa_session');
+  if(!raw)return;
+  try{
+    const saved=JSON.parse(raw);
+    if(saved&&saved.paused){
+      const yes=confirm(a()?'لديك جلسة سابقة محفوظة — هل تريد استكمالها؟':'You have a saved session — resume it?');
+      if(yes){
+        session=saved;
+        document.getElementById('sessionChoice').style.display='none';
+        document.getElementById('timerView').style.display='block';
+        session.endTime=Date.now()+session.pausedRemain*1000;
+        session.paused=false;
+        tickId=setInterval(tickFn,500);
+        renderTimer();
+      }else{
+        localStorage.removeItem('sa_session');
+      }
+    }
+  }catch(e){localStorage.removeItem('sa_session')}
+}
+
+/* ===== INIT ===== */
 function init(){
-  aT();aL();
+  aT();aL();refreshStats();
+  if(window.location.hash==='#arena'){
+    document.getElementById('landingGrid').style.display='none';
+    document.getElementById('arenaContent').style.display='block';
+    checkResume();
+  }
   setTimeout(()=>document.getElementById('reveal').classList.add('done'),1200);
 }
 init();
