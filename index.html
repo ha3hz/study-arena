@@ -82,10 +82,10 @@ canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
 .glow-center{position:absolute;width:200px;height:200px;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(91,138,255,.15),transparent 70%);filter:blur(40px);pointer-events:none;z-index:-1}
 
 /* WELCOME BAR */
-.welcome-bar{margin:16px 0 20px;padding:18px 24px;background:var(--gl);backdrop-filter:blur(20px);border:1px solid var(--bd2);border-radius:var(--r);display:flex;align-items:center;justify-content:space-between;gap:16px;box-shadow:var(--glb)}
-.welcome-text{font-size:17px;font-weight:800}
-.welcome-date{text-align:end;font-size:11px;color:var(--t3);line-height:1.7}
-.welcome-date .hij{color:var(--t2);font-weight:700;font-size:11.5px}
+.welcome-bar{margin:16px 0 4px;padding:18px 24px;background:var(--gl);backdrop-filter:blur(20px);border:1px solid var(--bd2);border-radius:var(--r);text-align:center;box-shadow:var(--glb)}
+.welcome-date{font-size:14px;color:var(--t2);line-height:1.8}
+.welcome-date .hij{color:var(--t1);font-weight:800;font-size:15px;margin-bottom:2px}
+.data-note{text-align:center;font-size:10.5px;color:var(--t3);margin:6px 0 20px;opacity:.7}
 
 /* LANDING GRID */
 .landing-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:32px}
@@ -209,6 +209,13 @@ canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
 .toast.v{transform:translateX(-50%) translateY(0)}
 .toast.ts{background:rgba(52,211,153,.9);color:#FFF}.toast.te{background:rgba(248,113,113,.9);color:#FFF}.toast.ti{background:rgba(91,138,255,.9);color:#FFF}
 
+/* PEAK CHART */
+.peak-chart{margin-bottom:28px}
+.peak-card{background:var(--gl);backdrop-filter:blur(20px);border:1px solid var(--bd2);border-radius:var(--r);padding:20px;position:relative;overflow:hidden}
+.peak-card::before{content:'';position:absolute;top:0;left:0;right:0;height:1px;background:var(--gm);opacity:.4}
+.peak-title{font-size:14px;font-weight:800;margin-bottom:14px;display:flex;align-items:center;gap:8px}
+.peak-canvas{width:100%;height:180px;display:block}
+
 .foot{text-align:center;padding:24px;font-size:13px;color:var(--t3);font-style:italic;opacity:.6}
 
 @media(max-width:480px){
@@ -272,14 +279,20 @@ canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
     </div>
 
     <div class="welcome-bar stg">
-      <div class="welcome-text" data-ar="مرحباً بك في ساحة المذاكرة" data-en="Welcome to Study Arena"></div>
       <div class="welcome-date"><div class="hij" id="hd"></div><div id="gd"></div></div>
     </div>
+    <div class="data-note" data-ar="البيانات يتم تحديثها يومياً" data-en="Data is updated daily"></div>
 
-    <div class="stats stg">
+    <div class="stats stg" style="grid-template-columns:repeat(2,1fr)">
       <div class="st-box"><div class="st-i">📖</div><div class="st-n" id="sA">0</div><div class="st-l" data-ar="يذاكرون الآن" data-en="Studying Now"></div></div>
-      <div class="st-box"><div class="st-i">👥</div><div class="st-n" id="sT">0</div><div class="st-l" data-ar="إجمالي المشاركين" data-en="Total"></div></div>
-      <div class="st-box"><div class="st-i">⏱️</div><div class="st-n" id="sTotalH">0h</div><div class="st-l" data-ar="إجمالي الساعات" data-en="Total Hours"></div></div>
+      <div class="st-box"><div class="st-i">⏱️</div><div class="st-n" id="sTotalH">0m</div><div class="st-l" data-ar="إجمالي الساعات" data-en="Total Hours"></div></div>
+    </div>
+
+    <div class="peak-chart stg">
+      <div class="peak-card">
+        <div class="peak-title"><span>📊</span><span data-ar="أكثر وقت يذاكرون فيه الطلاب حسب بيانات الساحة" data-en="When students study the most based on arena data"></span></div>
+        <canvas class="peak-canvas" id="peakCanvas"></canvas>
+      </div>
     </div>
 
     <div class="form-w stg" id="fW">
@@ -477,21 +490,15 @@ function updMyUI(d){
 /* STATS */
 function updStats(){
   const studying=R.filter(r=>r.status==='studying').length;
-  const total=R.length;
   let totalSec=0;
-  R.forEach(r=>{totalSec+=(r.total_study_seconds||0)+(r.study_duration_minutes||25)*60-(r.remaining_seconds||0)});
-  // Simple: sum all study_duration - remaining for active, + total_study_seconds for finished
-  totalSec=0;
   R.forEach(r=>{
-    if(r.status==='finished') totalSec+=(r.study_duration_minutes||25)*60;
-    else if(r.ends_at){
-      const elapsed=Math.max(0,(r.study_duration_minutes||25)*60-rem(r));
-      totalSec+=elapsed;
-    }
+    if(r.status==='finished') totalSec+=(r.total_study_seconds||(r.study_duration_minutes||25)*60);
+    else if(r.current_phase==='study'&&r.ends_at) totalSec+=Math.max(0,(r.study_duration_minutes||25)*60-rem(r));
+    else totalSec+=(r.total_study_seconds||0);
   });
+  // Also add ALL sessions data for total
   const h=Math.floor(totalSec/3600),m=Math.floor((totalSec%3600)/60);
   document.getElementById('sA').textContent=studying;
-  document.getElementById('sT').textContent=total;
   document.getElementById('sTotalH').textContent=h>0?`${h}h ${m}m`:`${m}m`;
 }
 
@@ -590,11 +597,136 @@ function startTick(){if(tick)clearInterval(tick);tick=setInterval(async()=>{
 },1000)}
 
 /* LOAD */
+let allSessions=[];
+
 async function load(){
   const{data}=await sb.from(TB).select('*').eq('created_date',td()).order('started_at',{ascending:true});
   R=data||[];rLB();updStats();
   if(mid){const me=R.find(r=>r.id===mid);if(me&&me.status!=='finished')showMe(me);else{localStorage.removeItem('sa_m');mid=null}}
+  // Load ALL sessions for chart (all dates)
+  const{data:allData}=await sb.from(TB).select('started_at');
+  allSessions=allData||[];
+  drawPeakChart();
 }
+
+/* PEAK HOURS CHART — Canvas API */
+function drawPeakChart(){
+  const canvas=document.getElementById('peakCanvas');
+  if(!canvas)return;
+  const ctx=canvas.getContext('2d');
+  const dpr=window.devicePixelRatio||1;
+  const rect=canvas.getBoundingClientRect();
+  canvas.width=rect.width*dpr;
+  canvas.height=rect.height*dpr;
+  ctx.scale(dpr,dpr);
+  const W=rect.width,H=rect.height;
+  ctx.clearRect(0,0,W,H);
+
+  // Aggregate sessions by hour (0-23)
+  const hours=new Array(24).fill(0);
+  allSessions.forEach(s=>{
+    if(s.started_at){
+      const h=new Date(s.started_at).getHours();
+      hours[h]++;
+    }
+  });
+
+  const maxVal=Math.max(...hours,1);
+  const padL=36,padR=12,padT=12,padB=28;
+  const chartW=W-padL-padR,chartH=H-padT-padB;
+  const isDark=document.body.getAttribute('data-theme')!=='light';
+
+  // Grid lines
+  ctx.strokeStyle=isDark?'rgba(255,255,255,.06)':'rgba(0,0,0,.06)';
+  ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){
+    const y=padT+chartH-(chartH/4)*i;
+    ctx.beginPath();ctx.moveTo(padL,y);ctx.lineTo(W-padR,y);ctx.stroke();
+  }
+
+  // Y-axis labels
+  ctx.fillStyle=isDark?'rgba(255,255,255,.3)':'rgba(0,0,0,.3)';
+  ctx.font='10px Outfit,sans-serif';
+  ctx.textAlign='right';
+  for(let i=0;i<=4;i++){
+    const y=padT+chartH-(chartH/4)*i;
+    const val=Math.round((maxVal/4)*i);
+    ctx.fillText(val,padL-6,y+3);
+  }
+
+  // X-axis labels
+  ctx.textAlign='center';
+  for(let h=0;h<24;h+=2){
+    const x=padL+(chartW/23)*h;
+    ctx.fillText(h,x,H-6);
+  }
+
+  // Area fill
+  const grad=ctx.createLinearGradient(0,padT,0,padT+chartH);
+  if(isDark){
+    grad.addColorStop(0,'rgba(91,138,255,.25)');
+    grad.addColorStop(1,'rgba(91,138,255,.02)');
+  }else{
+    grad.addColorStop(0,'rgba(59,106,224,.2)');
+    grad.addColorStop(1,'rgba(59,106,224,.01)');
+  }
+
+  ctx.beginPath();
+  ctx.moveTo(padL,padT+chartH);
+  for(let h=0;h<24;h++){
+    const x=padL+(chartW/23)*h;
+    const y=padT+chartH-(hours[h]/maxVal)*chartH;
+    if(h===0)ctx.lineTo(x,y);
+    else{
+      // Smooth curve
+      const prevX=padL+(chartW/23)*(h-1);
+      const prevY=padT+chartH-(hours[h-1]/maxVal)*chartH;
+      const cpx=(prevX+x)/2;
+      ctx.bezierCurveTo(cpx,prevY,cpx,y,x,y);
+    }
+  }
+  ctx.lineTo(padL+(chartW/23)*23,padT+chartH);
+  ctx.closePath();
+  ctx.fillStyle=grad;
+  ctx.fill();
+
+  // Line
+  ctx.beginPath();
+  for(let h=0;h<24;h++){
+    const x=padL+(chartW/23)*h;
+    const y=padT+chartH-(hours[h]/maxVal)*chartH;
+    if(h===0)ctx.moveTo(x,y);
+    else{
+      const prevX=padL+(chartW/23)*(h-1);
+      const prevY=padT+chartH-(hours[h-1]/maxVal)*chartH;
+      const cpx=(prevX+x)/2;
+      ctx.bezierCurveTo(cpx,prevY,cpx,y,x,y);
+    }
+  }
+  ctx.strokeStyle=isDark?'rgba(91,138,255,.8)':'rgba(59,106,224,.7)';
+  ctx.lineWidth=2;
+  ctx.stroke();
+
+  // Dots on peaks
+  const threshold=maxVal*0.5;
+  for(let h=0;h<24;h++){
+    if(hours[h]>=threshold&&hours[h]>0){
+      const x=padL+(chartW/23)*h;
+      const y=padT+chartH-(hours[h]/maxVal)*chartH;
+      ctx.beginPath();ctx.arc(x,y,3,0,Math.PI*2);
+      ctx.fillStyle=isDark?'rgba(91,138,255,1)':'rgba(59,106,224,1)';
+      ctx.fill();
+      ctx.beginPath();ctx.arc(x,y,6,0,Math.PI*2);
+      ctx.fillStyle=isDark?'rgba(91,138,255,.15)':'rgba(59,106,224,.1)';
+      ctx.fill();
+    }
+  }
+}
+
+// Redraw chart on theme change
+const origTgT=tgT;
+tgT=function(){origTgT();setTimeout(drawPeakChart,100)};
+window.addEventListener('resize',()=>setTimeout(drawPeakChart,200));
 
 /* REALTIME */
 function sub(){
