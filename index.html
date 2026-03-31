@@ -30,8 +30,9 @@
 --glb:0 0 20px rgba(59,106,224,.08);--gln:0 4px 24px rgba(0,0,0,.06);
 }
 *,*::before,*::after{margin:0;padding:0;box-sizing:border-box}
-.st-n,.timer-val,.ct,.rk,.sc-timer{font-variant-numeric:tabular-nums;unicode-bidi:plaintext;direction:ltr;display:inline-block}
-html{scroll-behavior:smooth}
+body,body *{font-feature-settings:'tnum';-moz-font-feature-settings:'tnum';-webkit-font-feature-settings:'tnum'}
+.st-n,.timer-val,.ct,.rk,.sc-timer,.welcome-date,.data-note,.cst,.s-pill{font-variant-numeric:tabular-nums;unicode-bidi:plaintext;direction:ltr;display:inline-block}
+html{scroll-behavior:smooth;-webkit-locale:'en'}
 body{font-family:var(--fa);background:var(--bg0);color:var(--t1);min-height:100vh;overflow-x:hidden;-webkit-font-smoothing:antialiased;transition:background .6s var(--ease),color .4s var(--ease)}
 [dir="ltr"] body,[dir="ltr"] input,[dir="ltr"] button{font-family:var(--fe)}
 
@@ -85,7 +86,7 @@ canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
 .welcome-bar{margin:16px 0 4px;padding:18px 24px;background:var(--gl);backdrop-filter:blur(20px);border:1px solid var(--bd2);border-radius:var(--r);text-align:center;box-shadow:var(--glb)}
 .welcome-date{font-size:14px;color:var(--t2);line-height:1.8}
 .welcome-date .hij{color:var(--t1);font-weight:800;font-size:15px;margin-bottom:2px}
-.data-note{text-align:center;font-size:10.5px;color:var(--t3);margin:6px 0 20px;opacity:.7}
+.data-note{text-align:center;font-size:12.5px;color:var(--t2);margin:8px 0 20px;font-weight:500}
 
 /* LANDING GRID */
 .landing-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-bottom:32px}
@@ -379,7 +380,9 @@ function fmtT(sec){
 
 /* DATES */
 function updD(){
-  const n=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Riyadh'})),lo=lang==='ar'?'ar-SA':'en-US',o={weekday:'long',year:'numeric',month:'long',day:'numeric',timeZone:'Asia/Riyadh'};
+  const n=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Riyadh'}));
+  const lo=lang==='ar'?'ar-SA-u-nu-latn':'en-US';
+  const o={weekday:'long',year:'numeric',month:'long',day:'numeric',timeZone:'Asia/Riyadh',numberingSystem:'latn'};
   try{document.getElementById('hd').textContent=n.toLocaleDateString(lo,{...o,calendar:'islamic-umalqura'})}catch(e){document.getElementById('hd').textContent=''}
   document.getElementById('gd').textContent=n.toLocaleDateString(lo,{...o,calendar:'gregory'});
 }
