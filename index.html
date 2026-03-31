@@ -565,15 +565,35 @@ function renderTimer(){
     btns.innerHTML=`
       <button class="bs b-brk" onclick="surpriseBreak()">${a()?'☕ بريك مفاجئ':'☕ Quick Break'}</button>
       <button class="bs b-fin" onclick="emergencySave()">${a()?'💾 حفظ طوارئ':'💾 Emergency Save'}</button>
-      <button class="bs b-fin" onclick="finishSession(false)">${a()?'⏹️ إنهاء':'⏹️ End'}</button>`;
+      <button class="bs b-fin" onclick="finishSession(false)">${a()?'⏹️ إنهاء':'⏹️ End'}</button>
+      <button class="bs b-rsm" onclick="switchSession()" style="width:100%">${a()?'🔄 تبديل نوع الجلسة':'🔄 Switch Session'}</button>`;
   }else{
     pill.classList.add('sp-b');card.classList.add('brk');
     pillTxt.textContent=a()?'بريك':'Break';
     phLbl.textContent=a()?'استرح قليلاً...':'Take a rest...';
     btns.innerHTML=`
       <button class="bs b-rsm" onclick="skipBreak()">${a()?'📖 تخطي البريك':'📖 Skip Break'}</button>
-      <button class="bs b-fin" onclick="finishSession(false)">${a()?'⏹️ إنهاء':'⏹️ End'}</button>`;
+      <button class="bs b-fin" onclick="finishSession(false)">${a()?'⏹️ إنهاء':'⏹️ End'}</button>
+      <button class="bs b-rsm" onclick="switchSession()" style="width:100%">${a()?'🔄 تبديل نوع الجلسة':'🔄 Switch Session'}</button>`;
   }
+}
+
+/* ===== SWITCH SESSION ===== */
+function switchSession(){
+  if(!session)return;
+  stopTimer();
+  // Save studied time if in work phase
+  if(session.phase==='work'){
+    const totalDur=getCurrentPhaseDuration();
+    const remain=Math.max(0,Math.round((session.endTime-Date.now())/1000));
+    const studied=totalDur-remain;
+    if(studied>0)addStudyTime(studied);
+  }
+  session=null;
+  localStorage.removeItem('sa_session');
+  document.getElementById('timerView').style.display='none';
+  showChoice();
+  refreshStats();
 }
 
 /* ===== START FIXED ===== */
