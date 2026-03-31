@@ -654,11 +654,14 @@ function drawPeakChart(){
     ctx.fillText(val,padL-6,y+3);
   }
 
-  // X-axis labels
+  // X-axis labels (12-hour format)
   ctx.textAlign='center';
-  for(let h=0;h<24;h+=2){
+  const isAr=lang==='ar';
+  for(let h=0;h<24;h+=3){
     const x=padL+(chartW/23)*h;
-    ctx.fillText(h,x,H-6);
+    const h12=h===0?12:h>12?h-12:h;
+    const ampm=h<12?(isAr?'ص':'AM'):(isAr?'م':'PM');
+    ctx.fillText(h12+ampm,x,H-6);
   }
 
   // Area fill
