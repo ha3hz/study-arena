@@ -1010,12 +1010,19 @@ function updateExamCountdowns(){
     if(diffStart>0){
       const d=Math.floor(diffStart/86400),h=Math.floor((diffStart%86400)/3600),m=Math.floor((diffStart%3600)/60),s=diffStart%60;
       if(ar()){
+        // Arabic plural rules
+        function arPlural(n,one,two,plural,gt10){
+          if(n===1)return one;
+          if(n===2)return two;
+          if(n>=3&&n<=10)return n+' '+plural;
+          return n+' '+gt10;
+        }
         let lines=[];
-        if(d>0)lines.push('متبقي '+d+' يوم');
+        if(d>0)lines.push('متبقي '+arPlural(d,'يوم واحد','يومين','أيام','يوم'));
         else lines.push('متبقي');
-        lines.push(h+' ساعة');
-        lines.push(m+' دقيقة');
-        lines.push(s+' ثانية');
+        lines.push(arPlural(h,'ساعة واحدة','ساعتين','ساعات','ساعة'));
+        lines.push(arPlural(m,'دقيقة واحدة','دقيقتين','دقائق','دقيقة'));
+        lines.push(arPlural(s,'ثانية واحدة','ثانيتين','ثواني','ثانية'));
         el.innerHTML=lines.map((l,i)=>`<div style="margin-bottom:${i<lines.length-1?'2px':'0'}">${i>0?'و ':''}${l}</div>`).join('');
       }else{
         let txt='';
