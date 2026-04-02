@@ -618,7 +618,12 @@ const COURSE_AR={
 "High Performance Computing":"الحوسبة عالية الأداء",
 "Intro To Software Engineering":"مقدمة في هندسة البرمجيات",
 "Intro. to Software Engineering":"مقدمة في هندسة البرمجيات",
-"Ethics in Software Engineers":"الأخلاقيات في هندسة البرمجيات"
+"Ethics in Software Engineers":"الأخلاقيات في هندسة البرمجيات",
+"General Biology":"أحياء عامة",
+"Mathematics":"رياضيات",
+"General Chemistry":"كيمياء عامة",
+"General Physics":"فيزياء عامة",
+"Calculus":"تفاضل وتكامل"
 };
 
 const EXAM_DATA={
@@ -866,7 +871,12 @@ const EXAM_DATA={
 {subject:"SWE214 Intro To Software Engineering",day:"Thursday",time:"11:30",date:"2026-04-09"},
 {subject:"SENG231 Intro. to Software Engineering",day:"Thursday",time:"11:30",date:"2026-04-09"},
 {subject:"SENG233 Ethics in Software Engineers",day:"Thursday",time:"13:00",date:"2026-04-09"}]},
-  science:{ar:'كلية العلوم',en:'College of Science',exams:[]},
+  science:{ar:'كلية العلوم',en:'College of Science',exams:[{subject:"BIOL101 General Biology",day:"Sunday",time:"12:00",date:"2026-04-12"},
+{subject:"MATH110 Mathematics",day:"Tuesday",time:"12:00",date:"2026-04-14"},
+{subject:"CHEM100 General Chemistry",day:"Thursday",time:"12:00",date:"2026-04-16"},
+{subject:"PHYS112 General Physics",day:"Sunday",time:"12:00",date:"2026-04-19"},
+{subject:"ICS103",day:"Tuesday",time:"12:00",date:"2026-04-21"},
+{subject:"MATH111 Calculus",day:"Thursday",time:"12:00",date:"2026-04-23"}]},
   engineering:{ar:'كلية الهندسة',en:'College of Engineering',exams:[]}
 };
 // Exams will be populated later with: {subject,college,day,time,date}
@@ -917,7 +927,8 @@ function showExamTable(key){
     '09:00':{start:'09:00 AM',end:'10:30 AM',durMin:90},
     '10:00':{start:'10:00 AM',end:'11:00 AM',durMin:60},
     '11:30':{start:'11:30 AM',end:'01:00 PM',durMin:90},
-    '13:00':{start:'01:00 PM',end:'02:00 PM',durMin:60}
+    '13:00':{start:'01:00 PM',end:'02:00 PM',durMin:60},
+    '12:00':{start:'12:00 PM',end:'01:30 PM',durMin:90}
   };
 
   let h='';
