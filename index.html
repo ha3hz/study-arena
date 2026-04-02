@@ -957,12 +957,12 @@ function showExamTable(key){
 
       h+=`<div data-exam-card style="background:var(--gl);border:1px solid var(--bd2);border-radius:var(--rs);padding:14px 16px;margin-bottom:6px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;transition:opacity .3s">
         <div>
-          <div style="font-size:16px;font-weight:900;background:var(--gm);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px;margin-bottom:5px;font-family:var(--fm)">${esc(code)}</div>
+          <div style="font-size:20px;font-weight:900;background:var(--gm);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1.5px;margin-bottom:6px;font-family:var(--fm)">${esc(code)}</div>
           <div style="font-size:14px;font-weight:700;margin-bottom:2px">${esc(nameEn)}</div>
           ${nameAr?`<div style="font-size:12px;color:var(--t3)">${esc(nameAr)}</div>`:''}
         </div>
-        <div style="text-align:center;min-width:100px">
-          <div class="ct exam-cd" data-target="${examTimeStr}" data-end="${examEndStr}" id="${cid}" style="font-size:16px;font-weight:800"></div>
+        <div style="text-align:center;min-width:120px">
+          <div class="ct exam-cd" data-target="${examTimeStr}" data-end="${examEndStr}" id="${cid}" style="font-size:13px;font-weight:700;line-height:1.6"></div>
           <div style="font-size:9px;color:var(--t3);margin-top:3px">${ar()?'المتبقي':'Remaining'}</div>
         </div>
       </div>`;
@@ -1010,17 +1010,20 @@ function updateExamCountdowns(){
     if(diffStart>0){
       const d=Math.floor(diffStart/86400),h=Math.floor((diffStart%86400)/3600),m=Math.floor((diffStart%3600)/60),s=diffStart%60;
       if(ar()){
-        let txt='متبقي ';
-        if(d>0)txt+=d+' يوم و ';
-        txt+=h+' ساعة و '+m+' دقيقة و '+s+' ثانية';
-        el.textContent=txt;
+        let lines=[];
+        if(d>0)lines.push('متبقي '+d+' يوم');
+        else lines.push('متبقي');
+        lines.push(h+' ساعة');
+        lines.push(m+' دقيقة');
+        lines.push(s+' ثانية');
+        el.innerHTML=lines.map((l,i)=>`<div style="margin-bottom:${i<lines.length-1?'2px':'0'}">${i>0?'و ':''}${l}</div>`).join('');
       }else{
         let txt='';
         if(d>0)txt+=d+'d '+h+'h '+m+'m '+s+'s';
         else txt+=h+'h '+m+'m '+s+'s';
         el.textContent=txt;
       }
-      el.style.color='';
+      el.style.color='';el.style.direction='rtl';el.style.textAlign='center';
       if(card)card.style.opacity='';
     }else if(diffEnd>0){
       el.textContent=ar()?'⏳ بدأ الاختبار':'⏳ Exam in progress';
