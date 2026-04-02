@@ -66,12 +66,20 @@ canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
 .hero h1{font-size:42px;font-weight:900;letter-spacing:-1px;margin-bottom:14px;background:var(--gm);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
 .hero .sub{font-size:15px;color:var(--t3);max-width:400px;margin:0 auto;line-height:1.8}
 .glow-center{position:absolute;width:200px;height:200px;left:50%;top:50%;transform:translate(-50%,-50%);border-radius:50%;background:radial-gradient(circle,rgba(91,138,255,.15),transparent 70%);filter:blur(40px);pointer-events:none;z-index:-1}
+@keyframes borderGlow{0%{background-position:0% 50%}50%{background-position:100% 50%}100%{background-position:0% 50%}}
+
+.day-header{position:relative}
+.day-header::after{content:'';position:absolute;inset:-1.5px;border-radius:inherit;padding:1.5px;background:linear-gradient(90deg,var(--nb),var(--nc),var(--np),var(--nb));background-size:300% 100%;animation:borderGlow 4s linear infinite;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:1}
+
+.land-card{position:relative}
+.land-card.active-card::after{content:'';position:absolute;inset:-1.5px;border-radius:inherit;padding:1.5px;background:linear-gradient(90deg,var(--nb),var(--nc),var(--np),var(--nb));background-size:300% 100%;animation:borderGlow 4s linear infinite;-webkit-mask:linear-gradient(#fff 0 0) content-box,linear-gradient(#fff 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none;z-index:1;opacity:.6}
+.land-card.active-card:hover::after{opacity:1}
+
 .landing-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-bottom:32px}
 @media(max-width:680px){.landing-grid{grid-template-columns:1fr}}
 .land-card{background:var(--gl);backdrop-filter:blur(20px);border:1px solid var(--bd2);border-radius:var(--rl);padding:32px 24px;text-align:center;cursor:pointer;transition:all .4s var(--ease);position:relative;overflow:hidden}
-.land-card::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;opacity:.5;transition:opacity .3s}
-.active-card::before{background:var(--gm)}
-.coming-card::before{background:linear-gradient(135deg,var(--no),var(--nr))}
+.active-card{z-index:1}
+.coming-card{opacity:.6;cursor:default;z-index:1}
 .active-card:hover{border-color:rgba(91,138,255,.25);transform:translateY(-4px);box-shadow:0 12px 40px rgba(91,138,255,.15)}
 .coming-card{opacity:.6;cursor:default}
 .platform-card::before{background:linear-gradient(135deg,var(--nb),var(--np))}
@@ -169,11 +177,11 @@ canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
       <p data-ar="ذاكر بمؤقت تنازلي ونافس زملائك لحظياً" data-en="Study with countdown timer & compete live"></p>
       <div class="land-btn" data-ar="ادخل الساحة ←" data-en="Enter Arena →"></div>
     </div>
-    <div class="land-card coming-card">
+    <div class="land-card active-card" onclick="enterExams()">
       <div class="land-icon">📅</div>
       <h3 data-ar="جداول الاختبارات" data-en="Exam Schedules"></h3>
-      <p data-ar="جدولة اختباراتك ومتابعة المواعيد بذكاء" data-en="Schedule exams and track dates smartly"></p>
-      <div class="land-soon" data-ar="قريباً 🔒" data-en="Coming Soon 🔒"></div>
+      <p data-ar="تابع مواعيد اختباراتك بعداد تنازلي مباشر" data-en="Track your exams with live countdown"></p>
+      <div class="land-btn" data-ar="عرض الجداول ←" data-en="View Schedules →"></div>
     </div>
     <a href="https://hamdan.help/" target="_blank" rel="noopener" style="text-decoration:none;color:inherit">
       <div class="land-card active-card platform-card">
@@ -230,6 +238,76 @@ canvas#particles{position:fixed;inset:0;z-index:0;pointer-events:none}
       <div id="lB"></div>
     </div>
   </div>
+  <!-- EXAMS CONTENT -->
+  <div id="examsContent" style="display:none">
+    <div class="arena-back" onclick="backFromExams()"><span>→</span><span data-ar="الرجوع للرئيسية" data-en="Back to Home"></span></div>
+
+    <!-- UNIVERSITIES -->
+    <div id="exUniList">
+      <div class="f-head" style="margin-bottom:20px"><h2 data-ar="📅 جداول الاختبارات" data-en="📅 Exam Schedules"></h2><p data-ar="اختر جامعتك" data-en="Select your university"></p></div>
+      <div class="landing-grid" style="grid-template-columns:1fr">
+        <div class="land-card active-card" onclick="showColleges()">
+          <div class="land-icon">🏛️</div>
+          <h3 data-ar="جامعة حائل" data-en="University of Hail"></h3>
+          <p data-ar="عرض كليات جامعة حائل" data-en="View University of Hail colleges"></p>
+          <div class="land-btn" data-ar="اختيار ←" data-en="Select →"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- COLLEGES -->
+    <div id="exColleges" style="display:none">
+      <div class="arena-back" onclick="backToUniList()"><span>→</span><span data-ar="رجوع للجامعات" data-en="Back to Universities"></span></div>
+      <div class="f-head" style="margin-bottom:20px"><h2 data-ar="🏛️ جامعة حائل" data-en="🏛️ University of Hail"></h2><p data-ar="اختر كليتك" data-en="Select your college"></p></div>
+      <div class="landing-grid" style="grid-template-columns:repeat(2,1fr)">
+        <div class="land-card active-card" onclick="showExamTable('business')">
+          <div class="land-icon">💼</div>
+          <h3 data-ar="كلية إدارة الأعمال" data-en="College of Business"></h3>
+          <div class="land-btn" data-ar="عرض الجدول" data-en="View Schedule"></div>
+        </div>
+        <div class="land-card active-card" onclick="showExamTable('cs')">
+          <div class="land-icon">💻</div>
+          <h3 data-ar="كلية علوم وهندسة الحاسب" data-en="Computer Science & Eng."></h3>
+          <div class="land-btn" data-ar="عرض الجدول" data-en="View Schedule"></div>
+        </div>
+        <div class="land-card active-card" onclick="showExamTable('science')">
+          <div class="land-icon">🔬</div>
+          <h3 data-ar="كلية العلوم" data-en="College of Science"></h3>
+          <div class="land-btn" data-ar="عرض الجدول" data-en="View Schedule"></div>
+        </div>
+        <div class="land-card active-card" onclick="showExamTable('engineering')">
+          <div class="land-icon">⚙️</div>
+          <h3 data-ar="كلية الهندسة" data-en="College of Engineering"></h3>
+          <div class="land-btn" data-ar="عرض الجدول" data-en="View Schedule"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXAM TABLE -->
+    <div id="exTable" style="display:none">
+      <div class="arena-back" onclick="backToColleges()"><span>→</span><span data-ar="رجوع للكليات" data-en="Back to Colleges"></span></div>
+      
+      <!-- WARNING BANNER -->
+      <div style="background:rgba(251,146,60,.08);border:1px solid rgba(251,146,60,.18);border-radius:var(--rs);padding:14px 18px;margin-bottom:16px;display:flex;gap:10px;align-items:flex-start">
+        <span style="font-size:20px;flex-shrink:0">⚠️</span>
+        <div>
+          <div style="font-size:12px;font-weight:700;color:var(--no);margin-bottom:4px" data-ar="تنبيه" data-en="Notice"></div>
+          <div style="font-size:11.5px;color:var(--t2);line-height:1.8" data-ar="قد تتوقف المزامنة أحياناً للأوقات، لذلك احتياطاً تأكد من جدولك اللي نازل لك بالايميل ثم طابق التتبع هنا بالموقع" data-en="Sync may occasionally stop. Please verify with your official email schedule and cross-check with the countdown here."></div>
+        </div>
+      </div>
+
+      <div class="f-head" style="margin-bottom:16px"><h2 id="exTableTitle"></h2></div>
+      <div id="exTableBody"></div>
+    </div>
+
+    <!-- TELEGRAM CTA -->
+    <a href="https://t.me/hamdan2s" target="_blank" rel="noopener" style="text-decoration:none;display:block;margin-top:40px;margin-bottom:32px">
+      <div style="background:var(--gl);backdrop-filter:blur(20px);border:1px solid var(--bd2);border-radius:var(--r);padding:20px;text-align:center;transition:all .3s;cursor:pointer" onmouseover="this.style.borderColor='rgba(91,138,255,.25)'" onmouseout="this.style.borderColor='var(--bd2)'">
+        <div style="font-size:13px;color:var(--t3);margin-bottom:6px" data-ar="إذا تبغى تضيف كليتك الخاصة" data-en="Want to add your college?"></div>
+        <div style="font-size:15px;font-weight:800;color:var(--nb)" data-ar="ارسل لنا على تلجرام ←" data-en="Message us on Telegram →"></div>
+      </div>
+    </a>
+  </div>
 </div>
 <div class="toast" id="tst"></div>
 
@@ -273,7 +351,13 @@ function tgL(){lang=lang==='ar'?'en':'ar';aL()}
 /* NAV */
 function enterArena(){document.getElementById('landingGrid').style.display='none';document.getElementById('arenaContent').style.display='block';try{history.pushState({page:'arena'},'','#arena')}catch(e){};refreshStats()}
 function backToLanding(){document.getElementById('arenaContent').style.display='none';document.getElementById('landingGrid').style.display='grid';try{history.pushState({page:'home'},'','#')}catch(e){}}
-window.addEventListener('popstate',e=>{if(e.state&&e.state.page==='arena'){document.getElementById('landingGrid').style.display='none';document.getElementById('arenaContent').style.display='block'}else{document.getElementById('arenaContent').style.display='none';document.getElementById('landingGrid').style.display='grid'}});
+window.addEventListener('popstate',e=>{
+  document.getElementById('landingGrid').style.display='grid';
+  document.getElementById('arenaContent').style.display='none';
+  document.getElementById('examsContent').style.display='none';
+  if(e.state&&e.state.page==='arena'){document.getElementById('landingGrid').style.display='none';document.getElementById('arenaContent').style.display='block'}
+  else if(e.state&&e.state.page==='exams'){document.getElementById('landingGrid').style.display='none';document.getElementById('examsContent').style.display='block'}
+});;
 
 /* START SESSION */
 async function startSession(){
@@ -409,6 +493,497 @@ function subRT(){
     else if(st==='CLOSED'||st==='CHANNEL_ERROR'){b.classList.add('off');l.textContent=ar()?'غير متصل':'Disconnected'}
   });
 }
+
+/* ===== EXAMS ===== */
+const COURSE_AR={
+"System Analysis and Design II":"تحليل وتصميم النظم 2","Acco. For Fin. Institutions":"محاسبة المؤسسات المالية","Monetary Economics":"اقتصاد نقدي","Marketing Communication":"الاتصالات التسويقية","Public Finance":"المالية العامة","Fundamentals of E-Commerce":"أساسيات التجارة الإلكترونية","Project Mgt. & System Appl.":"إدارة المشاريع وتطبيقات النظم","Corporate Governance & Profess":"حوكمة الشركات والمهنية","Principles of Microeconomics":"مبادئ الاقتصاد الجزئي","Islamic Accounting & Standards":"المحاسبة الإسلامية والمعايير","FinTech: Foundations and Appli":"التقنية المالية: الأسس والتطبيقات","Banking management":"إدارة البنوك","International Management":"الإدارة الدولية","Marketing Management":"إدارة التسويق","Strategic Management":"الإدارة الاستراتيجية","LEGAL ENVIRONMENT":"البيئة القانونية","Finite Mathematics":"الرياضيات المحدودة","Operations Management":"إدارة العمليات","Technology of E-Business":"تقنية الأعمال الإلكترونية","Mgt. In The Public Sector":"الإدارة في القطاع العام","Business Communication":"الاتصالات التجارية","Selected topics in MIS":"موضوعات مختارة في نظم المعلومات","Portfolio Management":"إدارة المحافظ المالية","Forensic Accounting":"المحاسبة الجنائية","Risk Management and Insurance":"إدارة المخاطر والتأمين","Decision Support Systems":"نظم دعم القرار","Islamic Finance":"التمويل الإسلامي","Principles of finance":"مبادئ التمويل","Digital Marketing":"التسويق الرقمي","Principles of Marketing":"مبادئ التسويق","Principles of Macroeconomics 2":"مبادئ الاقتصاد الكلي 2","Contemporary Marketing Issues":"قضايا التسويق المعاصرة","Corporate Accounting":"محاسبة الشركات","Financial Decisions":"القرارات المالية","Accounting Information System":"نظم المعلومات المحاسبية","Quantitative Methods For Busin":"الأساليب الكمية للأعمال","Governmental and Non Profit Ac":"المحاسبة الحكومية وغير الربحية","International Corporate Financ":"التمويل الدولي للشركات","Alternative Investment":"الاستثمار البديل","Business Ethics & Corporate Re":"أخلاقيات الأعمال ومسؤولية الشركات","Auditing and Assurance":"المراجعة والتأكيد","IT Service Management":"إدارة خدمات تقنية المعلومات","Corporate Finance":"تمويل الشركات","Principles of Finance":"مبادئ التمويل","Negotiation Management":"إدارة التفاوض","Organizational Behavior":"السلوك التنظيمي","Intermediate Accounting II":"المحاسبة المتوسطة 2","Data Management systems":"نظم إدارة البيانات","Social Media Marketing":"تسويق وسائل التواصل","Accounting for Islamic Banks":"محاسبة البنوك الإسلامية","International Buisness":"الأعمال الدولية","Financial Markets and Institut":"الأسواق والمؤسسات المالية","Intermediate Accounting I":"المحاسبة المتوسطة 1","Financial Reports Analysis":"تحليل التقارير المالية","Intermediate Accounting |":"المحاسبة المتوسطة 1","Principles of Accounting I":"مبادئ المحاسبة 1","Principles of Accounting-||":"مبادئ المحاسبة 2","Performance Management":"إدارة الأداء","Retail Management":"إدارة التجزئة","Essentials of Consumer Behavio":"أساسيات سلوك المستهلك","Introduction to Artificial Int":"مقدمة في الذكاء الاصطناعي","System Analysis and Design I":"تحليل وتصميم النظم 1","Information Security":"أمن المعلومات","Fiqh Of Transactions (1)":"فقه المعاملات (1)","Derivatives":"المشتقات المالية","International Business Law":"قانون الأعمال الدولي","Introduction to Law":"مقدمة في القانون","Treasury Management":"إدارة الخزينة","Financial Regulations":"الأنظمة المالية","Fundamentals of Computer Netwo":"أساسيات شبكات الحاسب","Cost Accounting":"محاسبة التكاليف","Cyber Security Management":"إدارة الأمن السيبراني","Corporate Finance Restructurin":"إعادة هيكلة تمويل الشركات","Personal Finance and Wealth Ma":"التمويل الشخصي وإدارة الثروة","Principles of Accounting II":"مبادئ المحاسبة 2","Sales Management":"إدارة المبيعات","Business intelligence systems":"نظم ذكاء الأعمال","Products Management":"إدارة المنتجات","Practical Mgmt.App -1":"تطبيقات إدارية عملية 1","Practical Mgmt. App-II":"تطبيقات إدارية عملية 2","Principles of MIS":"مبادئ نظم المعلومات","Petroleum & Minerals Acc.":"محاسبة البترول والمعادن","System Analysis and Design |":"تحليل وتصميم النظم 1","Saudi Financial System":"النظام المالي السعودي","Fund. of Islamic Economics":"أسس الاقتصاد الإسلامي","Economy of Saudi Arabia":"اقتصاد المملكة","Fund. Of web design":"أساسيات تصميم الويب","Principles of Macroeconomics":"مبادئ الاقتصاد الكلي","Advanced Accounting":"محاسبة متقدمة","Fundamentals of E-commerce":"أساسيات التجارة الإلكترونية","Business Calculus":"حساب التفاضل للأعمال","Strategic Marketing":"التسويق الاستراتيجي","Business Legal Environment":"البيئة القانونية للأعمال","Crisis Management":"إدارة الأزمات","Managerial Accounting":"المحاسبة الإدارية","Business Analytic & Mgmt. Apps":"تحليلات الأعمال وتطبيقات الإدارة","Algebra":"الجبر","Supply Chain Management":"إدارة سلسلة الإمداد","Introduction to Programming":"مقدمة في البرمجة","Integrated Systems and Managin":"النظم المتكاملة والإدارة","International Accounting Stand":"المعايير المحاسبية الدولية","Principles Of Marketing":"مبادئ التسويق","Services Marketing":"تسويق الخدمات","Principles of Financial Accou":"مبادئ المحاسبة المالية","Tax Accounting":"المحاسبة الضريبية","Ethics in Finance":"الأخلاقيات في التمويل","Small Business Management":"إدارة المشاريع الصغيرة","Social & Ethical Issues of Int":"القضايا الاجتماعية والأخلاقية","Social & Ethical Issues Intern":"القضايا الاجتماعية والأخلاقية","Project Management":"إدارة المشاريع","Zakat Accounting":"محاسبة الزكاة","Marketing Research and Analyti":"بحوث التسويق والتحليلات","Investment Analysis":"تحليل الاستثمار","Computerize Accounting App.":"تطبيقات المحاسبة المحوسبة","Human Resource Mgmt":"إدارة الموارد البشرية","Principles of Management":"مبادئ الإدارة","Selected Topics In Finance":"موضوعات مختارة في التمويل","MGT465 Research Project in Management":"مشروع بحث في الإدارة",
+"Microcomputer Sys Design":"تصميم أنظمة الحاسب المصغر",
+"Computer Programming I":"برمجة الحاسب 1",
+"Computer Programming II":"برمجة الحاسب 2",
+"Business Intelligence":"ذكاء الأعمال",
+"Selected topics in security II":"موضوعات مختارة في الأمن 2",
+"Satellite Communication":"اتصالات الأقمار الصناعية",
+"Data Communication Networking":"شبكات اتصالات البيانات",
+"Data Structures & Algorithms":"هياكل البيانات والخوارزميات",
+"DB Administration and Security":"إدارة قواعد البيانات والأمن",
+"Database Management Systems":"نظم إدارة قواعد البيانات",
+"Design and Analysis of Algorit":"تصميم وتحليل الخوارزميات",
+"Web Development":"تطوير الويب",
+"Introduction to Robotics":"مقدمة في الروبوتات",
+"Systems & Signal Analysis":"تحليل الأنظمة والإشارات",
+"Databases Systems":"أنظمة قواعد البيانات",
+"Data Structures":"هياكل البيانات",
+"Web Engineering":"هندسة الويب",
+"Adhoc and Internet of Things N":"شبكات IoT والشبكات المؤقتة",
+"Software Project Management":"إدارة مشاريع البرمجيات",
+"Telecommunications Network Des":"تصميم شبكات الاتصالات",
+"Parallel Computing":"الحوسبة المتوازية",
+"Computer Organization":"تنظيم الحاسب",
+"Fundamental of Security":"أساسيات الأمن",
+"Fundamentals of Machine Learni":"أساسيات تعلم الآلة",
+"Network Programming":"برمجة الشبكات",
+"Wireless and Mobile Security":"أمن الشبكات اللاسلكية والجوال",
+"Security Fundamentals":"أساسيات الأمن",
+"Data Privacy and Security":"خصوصية البيانات والأمن",
+"Cloud Computing":"الحوسبة السحابية",
+"Special Topic I":"موضوع خاص 1",
+"Foundation Of Computer Science":"أسس علوم الحاسب",
+"Special Topics 2":"موضوعات خاصة 2",
+"Electric Circuits":"الدوائر الكهربائية",
+"AI for IoT":"الذكاء الاصطناعي لإنترنت الأشياء",
+"Creativity and Innovation":"الإبداع والابتكار",
+"Distributed Computing":"الحوسبة الموزعة",
+"Software Modeling & Simulation":"نمذجة ومحاكاة البرمجيات",
+"Information Security Managemen":"إدارة أمن المعلومات",
+"Software Design & Architecture":"تصميم وهندسة البرمجيات",
+"High Speed Networks":"الشبكات عالية السرعة",
+"Advanced Computer Programming":"برمجة حاسب متقدمة",
+"Selected topics in security I":"موضوعات مختارة في الأمن 1",
+"Machine Learning":"تعلم الآلة",
+"Interactive and Communication":"التفاعل والاتصال",
+"VLSI Design":"تصميم الدوائر المتكاملة",
+"Computer Programming":"برمجة الحاسب",
+"Discrete Structures":"البنى المنفصلة",
+"Artificial Intelligence":"الذكاء الاصطناعي",
+"Fundamentals of Data Science 2":"أساسيات علم البيانات 2",
+"Fundamentals of Data Mining":"أساسيات التنقيب عن البيانات",
+"Desing & Model Of Digital Sys":"تصميم ونمذجة الأنظمة الرقمية",
+"Selected Topics in Artificial":"موضوعات مختارة في الذكاء الاصطناعي",
+"Electronic Circuits":"الدوائر الإلكترونية",
+"Ethical Hacking":"القرصنة الأخلاقية",
+"Networks and Communication Sec":"أمن الشبكات والاتصالات",
+"Network Simulation":"محاكاة الشبكات",
+"Software Requirements Engineer":"هندسة متطلبات البرمجيات",
+"Web Design and Development":"تصميم وتطوير الويب",
+"Internet & Web App Development":"تطوير تطبيقات الإنترنت والويب",
+"Engineering Software as a Serv":"هندسة البرمجيات كخدمة",
+"Microcomputer System Design":"تصميم أنظمة الحاسب المصغر",
+"Compiler Design":"تصميم المترجمات",
+"Computers, Ethics & Society":"الحاسب والأخلاقيات والمجتمع",
+"Operating Systems":"أنظمة التشغيل",
+"Robotics":"الروبوتات",
+"Digital Logic":"المنطق الرقمي",
+"Digital Forensics":"الأدلة الرقمية الجنائية",
+"Electronic Circuit Analysis":"تحليل الدوائر الإلكترونية",
+"Optical Fiber Communication":"اتصالات الألياف الضوئية",
+"Programming Languages & Paradi":"لغات البرمجة والنماذج",
+"Internet Protocols & C/S Prog":"بروتوكولات الإنترنت وبرمجة خادم/عميل",
+"Neural Networks":"الشبكات العصبية",
+"Computer Architecture":"هندسة الحاسب",
+"Computer Graphics":"رسومات الحاسب",
+"Deep Learning":"التعلم العميق",
+"Introduction to Information Se":"مقدمة في أمن المعلومات",
+"Critical Thinking and Study Sk":"التفكير الناقد ومهارات الدراسة",
+"Fund. of Data Sciences":"أساسيات علوم البيانات",
+"Advanced Routing and Switching":"التوجيه والتبديل المتقدم",
+"Network Security":"أمن الشبكات",
+"Mobile Computing":"الحوسبة المتنقلة",
+"Data Visualization":"تصور البيانات",
+"Probability & Statistics":"الاحتمالات والإحصاء",
+"Human-computer Interaction":"تفاعل الإنسان والحاسب",
+"Selected Topics I":"موضوعات مختارة 1",
+"Fundamentals Of Prog Languages":"أساسيات لغات البرمجة",
+"Computer and Network Security":"أمن الحاسب والشبكات",
+"Data and Computer Communicatio":"اتصالات البيانات والحاسب",
+"Computer Networks":"شبكات الحاسب",
+"Introduction to Big Data":"مقدمة في البيانات الضخمة",
+"Machine Learning for Security":"تعلم الآلة للأمن",
+"User Experience Design":"تصميم تجربة المستخدم",
+"Networks and Communication Reg":"تنظيم الشبكات والاتصالات",
+"Fundamentals of Routing and Sw":"أساسيات التوجيه والتبديل",
+"Advanced Database Systems":"أنظمة قواعد بيانات متقدمة",
+"Cryptography":"التشفير",
+"Fund. of Artificial Intelligen":"أساسيات الذكاء الاصطناعي",
+"Natural Language Processing":"معالجة اللغات الطبيعية",
+"Wireless Sensor Networks":"شبكات الاستشعار اللاسلكية",
+"System Design Lab":"معمل تصميم الأنظمة",
+"Deep learning":"التعلم العميق",
+"Computer Networks Principles":"مبادئ شبكات الحاسب",
+"Microprocessor System Design":"تصميم أنظمة المعالجات الدقيقة",
+"Telecommunication Networks":"شبكات الاتصالات",
+"Networking Operating Systems":"أنظمة تشغيل الشبكات",
+"Secure Software Development":"تطوير برمجيات آمنة",
+"Software Testing & Quality Ass":"اختبار البرمجيات وضمان الجودة",
+"Technical Project Management":"إدارة المشاريع التقنية",
+"Software Engineering":"هندسة البرمجيات",
+"Artificial Intelligence for Cy":"الذكاء الاصطناعي للأمن السيبراني",
+"Microprocessors":"المعالجات الدقيقة",
+"Embedded Systems":"الأنظمة المدمجة",
+"High Performance Computing":"الحوسبة عالية الأداء",
+"Intro To Software Engineering":"مقدمة في هندسة البرمجيات",
+"Intro. to Software Engineering":"مقدمة في هندسة البرمجيات",
+"Ethics in Software Engineers":"الأخلاقيات في هندسة البرمجيات"
+};
+
+const EXAM_DATA={
+  business:{ar:'كلية إدارة الأعمال',en:'College of Business',exams:[{subject:"MIS217 System Analysis and Design II",day:"Thursday",time:"09:00",date:"2026-04-09"},
+{subject:"ACC308 Acco. For Fin. Institutions",day:"Thursday",time:"09:00",date:"2026-04-09"},
+{subject:"ECNB220 Monetary Economics",day:"Thursday",time:"09:00",date:"2026-04-09"},
+{subject:"MKTB311 Marketing Communication",day:"Thursday",time:"09:00",date:"2026-04-09"},
+{subject:"FIN302 Public Finance",day:"Thursday",time:"09:00",date:"2026-04-09"},
+{subject:"MIS308 Fundamentals of E-Commerce",day:"Thursday",time:"11:30",date:"2026-04-09"},
+{subject:"MIS431 Project Mgt. & System Appl.",day:"Thursday",time:"11:30",date:"2026-04-09"},
+{subject:"ACC307 Corporate Governance & Profess",day:"Thursday",time:"11:30",date:"2026-04-09"},
+{subject:"ECNB101 Principles of Microeconomics",day:"Thursday",time:"11:30",date:"2026-04-09"},
+{subject:"ACC304 Islamic Accounting & Standards",day:"Thursday",time:"11:30",date:"2026-04-09"},
+{subject:"FIN437 FinTech: Foundations and Appli",day:"Thursday",time:"11:30",date:"2026-04-09"},
+{subject:"FIN325 Banking management",day:"Thursday",time:"09:00",date:"2026-04-09"},
+{subject:"MGT304 International Management",day:"Thursday",time:"11:30",date:"2026-04-09"},
+{subject:"MGT315 Marketing Management",day:"Thursday",time:"11:30",date:"2026-04-09"},
+{subject:"MGT421 Strategic Management",day:"Thursday",time:"11:30",date:"2026-04-09"},
+{subject:"MGT212 LEGAL ENVIRONMENT",day:"Thursday",time:"11:30",date:"2026-04-09"},
+{subject:"MATH128 Finite Mathematics",day:"Sunday",time:"09:00",date:"2026-04-12"},
+{subject:"MGT313 Operations Management",day:"Sunday",time:"11:30",date:"2026-04-12"},
+{subject:"MIS329 Technology of E-Business",day:"Monday",time:"09:00",date:"2026-04-13"},
+{subject:"MGT413 Mgt. In The Public Sector",day:"Monday",time:"09:00",date:"2026-04-13"},
+{subject:"MGTB225 Business Communication",day:"Monday",time:"09:00",date:"2026-04-13"},
+{subject:"MGT215 Business Communication",day:"Monday",time:"09:00",date:"2026-04-13"},
+{subject:"MIS471 Selected topics in MIS",day:"Monday",time:"09:00",date:"2026-04-13"},
+{subject:"FIN422 Portfolio Management",day:"Monday",time:"11:30",date:"2026-04-13"},
+{subject:"ACC467 Forensic Accounting",day:"Monday",time:"11:30",date:"2026-04-13"},
+{subject:"FIN445 Risk Management and Insurance",day:"Monday",time:"11:30",date:"2026-04-13"},
+{subject:"MIS409 Decision Support Systems",day:"Monday",time:"11:30",date:"2026-04-13"},
+{subject:"FIN316 Islamic Finance",day:"Monday",time:"11:30",date:"2026-04-13"},
+{subject:"FIN103 Principles of finance",day:"Monday",time:"11:30",date:"2026-04-13"},
+{subject:"MKTB393 Digital Marketing",day:"Tuesday",time:"09:00",date:"2026-04-14"},
+{subject:"MKTB103 Principles of Marketing",day:"Tuesday",time:"09:00",date:"2026-04-14"},
+{subject:"ECNB102 Principles of Macroeconomics 2",day:"Tuesday",time:"09:00",date:"2026-04-14"},
+{subject:"MKTB463 Contemporary Marketing Issues",day:"Tuesday",time:"09:00",date:"2026-04-14"},
+{subject:"ACC208 Corporate Accounting",day:"Tuesday",time:"09:00",date:"2026-04-14"},
+{subject:"FIN423 Financial Decisions",day:"Tuesday",time:"09:00",date:"2026-04-14"},
+{subject:"ACC302 Accounting Information System",day:"Tuesday",time:"09:00",date:"2026-04-14"},
+{subject:"STAT102 Quantitative Methods For Busin",day:"Tuesday",time:"11:30",date:"2026-04-14"},
+{subject:"ACC206 Governmental and Non Profit Ac",day:"Tuesday",time:"11:30",date:"2026-04-14"},
+{subject:"FIN322 International Corporate Financ",day:"Tuesday",time:"11:30",date:"2026-04-14"},
+{subject:"FIN440 Alternative Investment",day:"Tuesday",time:"09:00",date:"2026-04-14"},
+{subject:"MGT422 Business Ethics & Corporate Re",day:"Tuesday",time:"11:30",date:"2026-04-14"},
+{subject:"ACC466 Auditing and Assurance",day:"Wednesday",time:"09:00",date:"2026-04-15"},
+{subject:"MIS339 IT Service Management",day:"Wednesday",time:"09:00",date:"2026-04-15"},
+{subject:"FIN215 Corporate Finance",day:"Wednesday",time:"09:00",date:"2026-04-15"},
+{subject:"FINB101 Principles of Finance",day:"Wednesday",time:"09:00",date:"2026-04-15"},
+{subject:"MGT423 Negotiation Management",day:"Wednesday",time:"09:00",date:"2026-04-15"},
+{subject:"MGT317 Organizational Behavior",day:"Wednesday",time:"11:30",date:"2026-04-15"},
+{subject:"ACC205 Intermediate Accounting II",day:"Wednesday",time:"11:30",date:"2026-04-15"},
+{subject:"MIS323 Data Management systems",day:"Wednesday",time:"11:30",date:"2026-04-15"},
+{subject:"MKTB362 Social Media Marketing",day:"Wednesday",time:"11:30",date:"2026-04-15"},
+{subject:"ACC202 Accounting for Islamic Banks",day:"Wednesday",time:"11:30",date:"2026-04-15"},
+{subject:"MGT302 International Buisness",day:"Wednesday",time:"11:30",date:"2026-04-15"},
+{subject:"FIN312 Financial Markets and Institut",day:"Wednesday",time:"11:30",date:"2026-04-15"},
+{subject:"ACC203 Intermediate Accounting I",day:"Thursday",time:"09:00",date:"2026-04-16"},
+{subject:"ACC309 Financial Reports Analysis",day:"Thursday",time:"09:00",date:"2026-04-16"},
+{subject:"ACCB201 Intermediate Accounting I",day:"Thursday",time:"09:00",date:"2026-04-16"},
+{subject:"ACCB101 Principles of Accounting I",day:"Thursday",time:"09:00",date:"2026-04-16"},
+{subject:"MGT322 Performance Management",day:"Thursday",time:"09:00",date:"2026-04-16"},
+{subject:"MKTB221 Retail Management",day:"Thursday",time:"11:30",date:"2026-04-16"},
+{subject:"MKTB212 Essentials of Consumer Behavio",day:"Thursday",time:"11:30",date:"2026-04-16"},
+{subject:"MIS321 Introduction to Artificial Int",day:"Thursday",time:"11:30",date:"2026-04-16"},
+{subject:"MIS214 System Analysis and Design I",day:"Thursday",time:"11:30",date:"2026-04-16"},
+{subject:"MIS425 Information Security",day:"Thursday",time:"11:30",date:"2026-04-16"},
+{subject:"SHAR270 Fiqh Of Transactions (1)",day:"Thursday",time:"11:30",date:"2026-04-16"},
+{subject:"MKTB321 Retail Management",day:"Thursday",time:"11:30",date:"2026-04-16"},
+{subject:"FIN320 Derivatives",day:"Thursday",time:"11:30",date:"2026-04-16"},
+{subject:"STAT103 Quantitative Methods For Busin",day:"Sunday",time:"09:00",date:"2026-04-19"},
+{subject:"BUS111 International Business Law",day:"Sunday",time:"09:00",date:"2026-04-19"},
+{subject:"LAW165 Introduction to Law",day:"Sunday",time:"09:00",date:"2026-04-19"},
+{subject:"FIN329 Treasury Management",day:"Sunday",time:"09:00",date:"2026-04-19"},
+{subject:"FIN380 Financial Regulations",day:"Sunday",time:"09:00",date:"2026-04-19"},
+{subject:"MIS328 Fundamentals of Computer Netwo",day:"Sunday",time:"11:30",date:"2026-04-19"},
+{subject:"ACC303 Cost Accounting",day:"Sunday",time:"11:30",date:"2026-04-19"},
+{subject:"MIS342 Cyber Security Management",day:"Sunday",time:"11:30",date:"2026-04-19"},
+{subject:"ECN210 Monetary Economics",day:"Sunday",time:"11:30",date:"2026-04-19"},
+{subject:"FIN415 Corporate Finance Restructurin",day:"Sunday",time:"11:30",date:"2026-04-19"},
+{subject:"FIN453 Personal Finance and Wealth Ma",day:"Sunday",time:"11:30",date:"2026-04-19"},
+{subject:"ACCB102 Principles of Accounting II",day:"Sunday",time:"11:30",date:"2026-04-19"},
+{subject:"MKTB432 Sales Management",day:"Sunday",time:"11:30",date:"2026-04-19"},
+{subject:"MIS434 Business intelligence systems",day:"Sunday",time:"11:30",date:"2026-04-19"},
+{subject:"MKTB343 Products Management",day:"Sunday",time:"11:30",date:"2026-04-19"},
+{subject:"MGT461 Practical Mgmt.App -1",day:"Sunday",time:"11:30",date:"2026-04-19"},
+{subject:"MGT462 Practical Mgmt. App-II",day:"Monday",time:"09:00",date:"2026-04-20"},
+{subject:"MISB101 Principles of MIS",day:"Monday",time:"09:00",date:"2026-04-20"},
+{subject:"ACC311 Petroleum & Minerals Acc.",day:"Monday",time:"09:00",date:"2026-04-20"},
+{subject:"MISB222 System Analysis and Design I",day:"Monday",time:"09:00",date:"2026-04-20"},
+{subject:"FIN225 Saudi Financial System",day:"Monday",time:"09:00",date:"2026-04-20"},
+{subject:"ECN312 Fund. of Islamic Economics",day:"Monday",time:"09:00",date:"2026-04-20"},
+{subject:"ECN316 Economy of Saudi Arabia",day:"Monday",time:"11:30",date:"2026-04-20"},
+{subject:"ECN103 Principles of Microeconomics",day:"Monday",time:"11:30",date:"2026-04-20"},
+{subject:"MIS427 Fund. Of web design",day:"Monday",time:"11:30",date:"2026-04-20"},
+{subject:"ECN105 Principles of Macroeconomics",day:"Monday",time:"11:30",date:"2026-04-20"},
+{subject:"ACC462 Advanced Accounting",day:"Monday",time:"11:30",date:"2026-04-20"},
+{subject:"MISB318 Fundamentals of E-commerce",day:"Monday",time:"11:30",date:"2026-04-20"},
+{subject:"MATH129 Business Calculus",day:"Tuesday",time:"09:00",date:"2026-04-21"},
+{subject:"MKTB450 Strategic Marketing",day:"Tuesday",time:"09:00",date:"2026-04-21"},
+{subject:"MGTB310 Business Legal Environment",day:"Tuesday",time:"09:00",date:"2026-04-21"},
+{subject:"MGT319 Crisis Management",day:"Tuesday",time:"09:00",date:"2026-04-21"},
+{subject:"ACC306 Managerial Accounting",day:"Tuesday",time:"09:00",date:"2026-04-21"},
+{subject:"MGT245 Business Analytic & Mgmt. Apps",day:"Tuesday",time:"09:00",date:"2026-04-21"},
+{subject:"MATH127 Algebra",day:"Tuesday",time:"09:00",date:"2026-04-21"},
+{subject:"MGT321 Supply Chain Management",day:"Tuesday",time:"11:30",date:"2026-04-21"},
+{subject:"MIS103 Principles of MIS",day:"Tuesday",time:"11:30",date:"2026-04-21"},
+{subject:"MIS213 Introduction to Programming",day:"Tuesday",time:"11:30",date:"2026-04-21"},
+{subject:"MISB223 Introduction to Programming",day:"Tuesday",time:"11:30",date:"2026-04-21"},
+{subject:"MIS352 Integrated Systems and Managin",day:"Tuesday",time:"11:30",date:"2026-04-21"},
+{subject:"ACC464 International Accounting Stand",day:"Tuesday",time:"11:30",date:"2026-04-21"},
+{subject:"MKT101 Principles Of Marketing",day:"Wednesday",time:"09:00",date:"2026-04-22"},
+{subject:"MKTB222 Services Marketing",day:"Wednesday",time:"09:00",date:"2026-04-22"},
+{subject:"ACC103 Principles of Financial Accou",day:"Wednesday",time:"09:00",date:"2026-04-22"},
+{subject:"ACC301 Tax Accounting",day:"Wednesday",time:"09:00",date:"2026-04-22"},
+{subject:"FIN435 Ethics in Finance",day:"Wednesday",time:"09:00",date:"2026-04-22"},
+{subject:"MGT419 Small Business Management",day:"Wednesday",time:"09:00",date:"2026-04-22"},
+{subject:"MIS404 Social & Ethical Issues of Int",day:"Wednesday",time:"09:00",date:"2026-04-22"},
+{subject:"MISB216 Social & Ethical Issues Intern",day:"Wednesday",time:"09:00",date:"2026-04-22"},
+{subject:"MGT305 Project Management",day:"Wednesday",time:"11:30",date:"2026-04-22"},
+{subject:"ACC300 Zakat Accounting",day:"Wednesday",time:"11:30",date:"2026-04-22"},
+{subject:"MKTB363 Marketing Research and Analyti",day:"Wednesday",time:"11:30",date:"2026-04-22"},
+{subject:"FIN317 Investment Analysis",day:"Wednesday",time:"11:30",date:"2026-04-22"},
+{subject:"FIN435 Ethics in Finance",day:"Wednesday",time:"11:30",date:"2026-04-22"},
+{subject:"ACC434 Computerize Accounting App.",day:"Wednesday",time:"11:30",date:"2026-04-22"},
+{subject:"MGT314 Human Resource Mgmt",day:"Thursday",time:"09:00",date:"2026-04-23"},
+{subject:"MGTB101 Principles of Management",day:"Thursday",time:"09:00",date:"2026-04-23"},
+{subject:"MGT103 Principles of Management",day:"Thursday",time:"11:30",date:"2026-04-23"}]},
+  cs:{ar:'كلية علوم وهندسة الحاسب',en:'Computer Science & Engineering',exams:[{subject:"COE305 Microcomputer Sys Design",day:"Thursday",time:"08:30",date:"2026-04-02"},
+{subject:"CSCE101 Computer Programming I",day:"Thursday",time:"08:30",date:"2026-04-02"},
+{subject:"CSCE102 Computer Programming II",day:"Thursday",time:"08:30",date:"2026-04-02"},
+{subject:"DSCE499 Business Intelligence",day:"Thursday",time:"08:30",date:"2026-04-02"},
+{subject:"ISEC491 Selected topics in security II",day:"Thursday",time:"08:30",date:"2026-04-02"},
+{subject:"NENG362 Satellite Communication",day:"Thursday",time:"08:30",date:"2026-04-02"},
+{subject:"NENG243 Data Communication Networking",day:"Thursday",time:"10:00",date:"2026-04-02"},
+{subject:"SENG232 Data Structures & Algorithms",day:"Thursday",time:"10:00",date:"2026-04-02"},
+{subject:"ISEC352 DB Administration and Security",day:"Thursday",time:"10:00",date:"2026-04-02"},
+{subject:"SENG351 Database Management Systems",day:"Thursday",time:"10:00",date:"2026-04-02"},
+{subject:"CSCE241 Design and Analysis of Algorit",day:"Thursday",time:"10:00",date:"2026-04-02"},
+{subject:"CSCE362 Web Development",day:"Thursday",time:"10:00",date:"2026-04-02"},
+{subject:"AINT363 Introduction to Robotics",day:"Thursday",time:"10:00",date:"2026-04-02"},
+{subject:"CENG351 Systems & Signal Analysis",day:"Thursday",time:"11:30",date:"2026-04-02"},
+{subject:"CSCE351 Databases Systems",day:"Thursday",time:"11:30",date:"2026-04-02"},
+{subject:"CSCE231 Data Structures",day:"Thursday",time:"11:30",date:"2026-04-02"},
+{subject:"SENG362 Web Engineering",day:"Thursday",time:"11:30",date:"2026-04-02"},
+{subject:"NENG497 Adhoc and Internet of Things N",day:"Thursday",time:"11:30",date:"2026-04-02"},
+{subject:"SENG353 Software Project Management",day:"Thursday",time:"13:00",date:"2026-04-02"},
+{subject:"CENG499 Telecommunications Network Des",day:"Thursday",time:"13:00",date:"2026-04-02"},
+{subject:"CENG496 Parallel Computing",day:"Sunday",time:"08:30",date:"2026-04-05"},
+{subject:"CENG241 Computer Organization",day:"Sunday",time:"08:30",date:"2026-04-05"},
+{subject:"CSCE363 Fundamental of Security",day:"Sunday",time:"08:30",date:"2026-04-05"},
+{subject:"DSCE351 Fundamentals of Machine Learni",day:"Sunday",time:"08:30",date:"2026-04-05"},
+{subject:"NENG363 Network Programming",day:"Sunday",time:"08:30",date:"2026-04-05"},
+{subject:"ISEC361 Wireless and Mobile Security",day:"Sunday",time:"10:00",date:"2026-04-05"},
+{subject:"SENG365 Security Fundamentals",day:"Sunday",time:"10:00",date:"2026-04-05"},
+{subject:"DSCE363 Data Privacy and Security",day:"Sunday",time:"10:00",date:"2026-04-05"},
+{subject:"CSCE482 Cloud Computing",day:"Sunday",time:"10:00",date:"2026-04-05"},
+{subject:"CSCE490 Special Topic I",day:"Sunday",time:"10:00",date:"2026-04-05"},
+{subject:"ICS251 Foundation Of Computer Science",day:"Sunday",time:"10:00",date:"2026-04-05"},
+{subject:"ICS491 Special Topics 2",day:"Sunday",time:"10:00",date:"2026-04-05"},
+{subject:"CENG231 Electric Circuits",day:"Sunday",time:"10:00",date:"2026-04-05"},
+{subject:"AINT486 AI for IoT",day:"Sunday",time:"10:00",date:"2026-04-05"},
+{subject:"CSCE0313 Creativity and Innovation",day:"Sunday",time:"10:00",date:"2026-04-05"},
+{subject:"CENG353 Distributed Computing",day:"Sunday",time:"11:30",date:"2026-04-05"},
+{subject:"SENG363 Software Modeling & Simulation",day:"Sunday",time:"11:30",date:"2026-04-05"},
+{subject:"ISEC242 Information Security Managemen",day:"Sunday",time:"11:30",date:"2026-04-05"},
+{subject:"SENG352 Software Design & Architecture",day:"Sunday",time:"13:00",date:"2026-04-05"},
+{subject:"NENG496 High Speed Networks",day:"Monday",time:"08:30",date:"2026-04-06"},
+{subject:"SENG494 Advanced Computer Programming",day:"Monday",time:"08:30",date:"2026-04-06"},
+{subject:"ISEC490 Selected topics in security I",day:"Monday",time:"08:30",date:"2026-04-06"},
+{subject:"AINT361 Machine Learning",day:"Monday",time:"08:30",date:"2026-04-06"},
+{subject:"CSCE0323 Interactive and Communication",day:"Monday",time:"08:30",date:"2026-04-06"},
+{subject:"CENG364 VLSI Design",day:"Monday",time:"08:30",date:"2026-04-06"},
+{subject:"ICS102 Computer Programming",day:"Monday",time:"08:30",date:"2026-04-06"},
+{subject:"CSCE121 Discrete Structures",day:"Monday",time:"08:30",date:"2026-04-06"},
+{subject:"CSCE361 Artificial Intelligence",day:"Monday",time:"10:00",date:"2026-04-06"},
+{subject:"DSCE241 Fundamentals of Data Science 2",day:"Monday",time:"10:00",date:"2026-04-06"},
+{subject:"DSCE361 Fundamentals of Data Mining",day:"Monday",time:"10:00",date:"2026-04-06"},
+{subject:"COE405 Desing & Model Of Digital Sys",day:"Monday",time:"10:00",date:"2026-04-06"},
+{subject:"AINT490 Selected Topics in Artificial",day:"Monday",time:"10:00",date:"2026-04-06"},
+{subject:"CENG242 Electronic Circuits",day:"Monday",time:"10:00",date:"2026-04-06"},
+{subject:"ISEC364 Ethical Hacking",day:"Monday",time:"10:00",date:"2026-04-06"},
+{subject:"NENG361 Networks and Communication Sec",day:"Monday",time:"10:00",date:"2026-04-06"},
+{subject:"NENG244 Network Simulation",day:"Monday",time:"10:00",date:"2026-04-06"},
+{subject:"SENG241 Software Requirements Engineer",day:"Monday",time:"10:00",date:"2026-04-06"},
+{subject:"ISEC241 Web Design and Development",day:"Monday",time:"11:30",date:"2026-04-06"},
+{subject:"SWE444 Internet & Web App Development",day:"Monday",time:"11:30",date:"2026-04-06"},
+{subject:"SENG361 Engineering Software as a Serv",day:"Monday",time:"11:30",date:"2026-04-06"},
+{subject:"CENG361 Microcomputer System Design",day:"Monday",time:"11:30",date:"2026-04-06"},
+{subject:"CSCE354 Compiler Design",day:"Monday",time:"11:30",date:"2026-04-06"},
+{subject:"CSCE234 Computers, Ethics & Society",day:"Monday",time:"13:00",date:"2026-04-06"},
+{subject:"CSCE352 Operating Systems",day:"Tuesday",time:"08:30",date:"2026-04-07"},
+{subject:"CENG495 Robotics",day:"Tuesday",time:"08:30",date:"2026-04-07"},
+{subject:"CENG121 Digital Logic",day:"Tuesday",time:"08:30",date:"2026-04-07"},
+{subject:"ISEC362 Digital Forensics",day:"Tuesday",time:"08:30",date:"2026-04-07"},
+{subject:"NENG233 Electronic Circuit Analysis",day:"Tuesday",time:"10:00",date:"2026-04-07"},
+{subject:"NENG492 Optical Fiber Communication",day:"Tuesday",time:"10:00",date:"2026-04-07"},
+{subject:"SENG243 Programming Languages & Paradi",day:"Tuesday",time:"10:00",date:"2026-04-07"},
+{subject:"SWE344 Internet Protocols & C/S Prog",day:"Tuesday",time:"10:00",date:"2026-04-07"},
+{subject:"AINT362 Neural Networks",day:"Tuesday",time:"10:00",date:"2026-04-07"},
+{subject:"CENG232 Computer Architecture",day:"Tuesday",time:"10:00",date:"2026-04-07"},
+{subject:"CSCE364 Computer Graphics",day:"Tuesday",time:"10:00",date:"2026-04-07"},
+{subject:"DSCE492 Deep Learning",day:"Tuesday",time:"10:00",date:"2026-04-07"},
+{subject:"ISEC231 Introduction to Information Se",day:"Tuesday",time:"10:00",date:"2026-04-07"},
+{subject:"CSCE484 Machine Learning",day:"Tuesday",time:"11:30",date:"2026-04-07"},
+{subject:"CSCE0213 Critical Thinking and Study Sk",day:"Tuesday",time:"11:30",date:"2026-04-07"},
+{subject:"SENG499 Fund. of Data Sciences",day:"Tuesday",time:"11:30",date:"2026-04-07"},
+{subject:"NENG493 Advanced Routing and Switching",day:"Wednesday",time:"08:30",date:"2026-04-08"},
+{subject:"ISEC351 Network Security",day:"Wednesday",time:"08:30",date:"2026-04-08"},
+{subject:"COE446 Mobile Computing",day:"Wednesday",time:"08:30",date:"2026-04-08"},
+{subject:"DSCE362 Data Visualization",day:"Wednesday",time:"08:30",date:"2026-04-08"},
+{subject:"CSCE233 Probability & Statistics",day:"Wednesday",time:"08:30",date:"2026-04-08"},
+{subject:"CSCE242 Human-computer Interaction",day:"Wednesday",time:"10:00",date:"2026-04-08"},
+{subject:"DSCE490 Selected Topics I",day:"Wednesday",time:"10:00",date:"2026-04-08"},
+{subject:"ICS313 Fundamentals Of Prog Languages",day:"Wednesday",time:"10:00",date:"2026-04-08"},
+{subject:"CENG363 Computer and Network Security",day:"Wednesday",time:"10:00",date:"2026-04-08"},
+{subject:"CENG243 Data and Computer Communicatio",day:"Wednesday",time:"10:00",date:"2026-04-08"},
+{subject:"CENG354 Computer Networks",day:"Wednesday",time:"10:00",date:"2026-04-08"},
+{subject:"AINT364 Introduction to Big Data",day:"Wednesday",time:"10:00",date:"2026-04-08"},
+{subject:"ISEC243 Machine Learning for Security",day:"Wednesday",time:"10:00",date:"2026-04-08"},
+{subject:"SENG242 User Experience Design",day:"Wednesday",time:"10:00",date:"2026-04-08"},
+{subject:"NENG365 Networks and Communication Reg",day:"Wednesday",time:"10:00",date:"2026-04-08"},
+{subject:"NENG351 Fundamentals of Routing and Sw",day:"Wednesday",time:"11:30",date:"2026-04-08"},
+{subject:"CSCE489 Advanced Database Systems",day:"Wednesday",time:"11:30",date:"2026-04-08"},
+{subject:"ISEC481 Cryptography",day:"Wednesday",time:"11:30",date:"2026-04-08"},
+{subject:"SENG498 Fund. of Artificial Intelligen",day:"Wednesday",time:"11:30",date:"2026-04-08"},
+{subject:"AINT485 Natural Language Processing",day:"Wednesday",time:"11:30",date:"2026-04-08"},
+{subject:"CENG494 Wireless Sensor Networks",day:"Thursday",time:"08:30",date:"2026-04-09"},
+{subject:"COE400 System Design Lab",day:"Thursday",time:"08:30",date:"2026-04-09"},
+{subject:"AINT482 Deep learning",day:"Thursday",time:"08:30",date:"2026-04-09"},
+{subject:"CSCE353 Computer Networks",day:"Thursday",time:"08:30",date:"2026-04-09"},
+{subject:"NENG234 Computer Networks Principles",day:"Thursday",time:"08:30",date:"2026-04-09"},
+{subject:"NENG232 Microprocessor System Design",day:"Thursday",time:"08:30",date:"2026-04-09"},
+{subject:"NENG352 Telecommunication Networks",day:"Thursday",time:"08:30",date:"2026-04-09"},
+{subject:"NENG364 Networking Operating Systems",day:"Thursday",time:"08:30",date:"2026-04-09"},
+{subject:"ISEC363 Secure Software Development",day:"Thursday",time:"10:00",date:"2026-04-09"},
+{subject:"SENG364 Software Testing & Quality Ass",day:"Thursday",time:"10:00",date:"2026-04-09"},
+{subject:"CSCE365 Technical Project Management",day:"Thursday",time:"10:00",date:"2026-04-09"},
+{subject:"CSCE232 Software Engineering",day:"Thursday",time:"10:00",date:"2026-04-09"},
+{subject:"ICS413 Software Engineering",day:"Thursday",time:"10:00",date:"2026-04-09"},
+{subject:"AINT484 Artificial Intelligence for Cy",day:"Thursday",time:"10:00",date:"2026-04-09"},
+{subject:"CENG352 Microprocessors",day:"Thursday",time:"11:30",date:"2026-04-09"},
+{subject:"CENG362 Embedded Systems",day:"Thursday",time:"11:30",date:"2026-04-09"},
+{subject:"DSCE493 Natural Language Processing",day:"Thursday",time:"11:30",date:"2026-04-09"},
+{subject:"CSCE487 High Performance Computing",day:"Thursday",time:"11:30",date:"2026-04-09"},
+{subject:"SWE214 Intro To Software Engineering",day:"Thursday",time:"11:30",date:"2026-04-09"},
+{subject:"SENG231 Intro. to Software Engineering",day:"Thursday",time:"11:30",date:"2026-04-09"},
+{subject:"SENG233 Ethics in Software Engineers",day:"Thursday",time:"13:00",date:"2026-04-09"}]},
+  science:{ar:'كلية العلوم',en:'College of Science',exams:[]},
+  engineering:{ar:'كلية الهندسة',en:'College of Engineering',exams:[]}
+};
+// Exams will be populated later with: {subject,college,day,time,date}
+
+function enterExams(){
+  document.getElementById('landingGrid').style.display='none';
+  document.getElementById('examsContent').style.display='block';
+  try{history.pushState({page:'exams'},'','#exams')}catch(e){}
+}
+function backFromExams(){
+  document.getElementById('examsContent').style.display='none';
+  document.getElementById('exUniList').style.display='block';
+  document.getElementById('exColleges').style.display='none';
+  document.getElementById('exTable').style.display='none';
+  document.getElementById('landingGrid').style.display='grid';
+  try{history.pushState({page:'home'},'','#')}catch(e){}
+}
+function showColleges(){
+  document.getElementById('exUniList').style.display='none';
+  document.getElementById('exColleges').style.display='block';
+}
+function backToUniList(){
+  document.getElementById('exColleges').style.display='none';
+  document.getElementById('exUniList').style.display='block';
+}
+function showExamTable(key){
+  const d=EXAM_DATA[key];if(!d)return;
+  document.getElementById('exColleges').style.display='none';
+  document.getElementById('exTable').style.display='block';
+  document.getElementById('exTableTitle').textContent=ar()?d.ar:d.en;
+
+  const body=document.getElementById('exTableBody');
+  if(!d.exams.length){
+    body.innerHTML=`<div class="ebox"><div class="ei">📅</div><h3>${ar()?'لم يتم إضافة الجدول بعد':'Schedule not added yet'}</h3><p>${ar()?'سيتم إضافته قريباً':'Coming soon'}</p></div>`;
+    return;
+  }
+
+  // Group by date+time
+  const groups={};
+  d.exams.forEach(ex=>{
+    const k=ex.date+'|'+ex.time;
+    if(!groups[k])groups[k]={date:ex.date,day:ex.day,time:ex.time,items:[]};
+    groups[k].items.push(ex);
+  });
+
+  let h='';
+  Object.values(groups).sort((a,b)=>a.date.localeCompare(b.date)||a.time.localeCompare(b.time)).forEach(g=>{
+    const timeLabel=g.time.includes('11')?'11:30 AM - 1:00 PM':'9:00 AM - 10:30 AM';
+    const dayAr={'Sunday':'الأحد','Monday':'الإثنين','Tuesday':'الثلاثاء','Wednesday':'الأربعاء','Thursday':'الخميس'}[g.day]||g.day;
+    
+    h+=`<div style="margin-bottom:36px">
+      <div class="day-header" style="background:var(--gls);border:1.5px solid rgba(91,138,255,.2);border-radius:var(--r);padding:20px 22px;margin-bottom:12px;box-shadow:0 4px 20px rgba(91,138,255,.08)">
+        <div style="position:absolute;top:0;left:0;right:0;height:3px;background:var(--gm)"></div>
+        <div style="display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px">
+        <div>
+          <div style="font-size:20px;font-weight:900">📅 ${ar()?dayAr:g.day}</div>
+          <div style="font-size:14px;color:var(--t2);margin-top:4px;font-weight:600">${g.date}</div>
+        </div>
+        <div style="background:rgba(91,138,255,.1);border:1px solid rgba(91,138,255,.15);border-radius:var(--rf);padding:8px 18px">
+          <div style="font-size:14px;font-weight:800;color:var(--nb)">🕐 ${timeLabel}</div>
+        </div>
+        </div>
+      </div>`;
+
+    g.items.forEach(ex=>{
+      const parts=ex.subject.match(/^([A-Z]{2,6}\d{3}[A-Z]?)\s+(.+)$/);
+      const code=parts?parts[1]:ex.subject.split(' ')[0];
+      const nameEn=parts?parts[2]:ex.subject;
+      const nameAr=COURSE_AR[nameEn]||'';
+      const examDate=new Date(ex.date+'T'+ex.time.replace('11:30','11:30').replace('09:00','09:00')+':00');
+      const cid='ex_'+Math.random().toString(36).substr(2,8);
+
+      h+=`<div data-exam-card style="background:var(--gl);border:1px solid var(--bd2);border-radius:var(--rs);padding:14px 16px;margin-bottom:6px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;transition:opacity .3s">
+        <div>
+          <div style="font-size:16px;font-weight:900;background:var(--gm);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:1px;margin-bottom:5px;font-family:var(--fm)">${esc(code)}</div>
+          <div style="font-size:14px;font-weight:700;margin-bottom:2px">${esc(nameEn)}</div>
+          ${nameAr?`<div style="font-size:12px;color:var(--t3)">${esc(nameAr)}</div>`:''}
+        </div>
+        <div style="text-align:center;min-width:100px">
+          <div class="ct exam-cd" data-target="${examDate.toISOString()}" id="${cid}" style="font-size:16px;font-weight:800"></div>
+          <div style="font-size:9px;color:var(--t3);margin-top:3px">${ar()?'المتبقي':'Remaining'}</div>
+        </div>
+      </div>`;
+    });
+
+    h+=`</div>`;
+  });
+
+  body.innerHTML=h;
+  updateExamCountdowns();
+}
+function backToColleges(){
+  document.getElementById('exTable').style.display='none';
+  document.getElementById('exColleges').style.display='block';
+}
+
+function updateExamCountdowns(){
+  const nowRiyadh=new Date(new Date().toLocaleString('en-US',{timeZone:'Asia/Riyadh'}));
+  const nowMs=nowRiyadh.getTime();
+  document.querySelectorAll('.exam-cd').forEach(el=>{
+    const target=new Date(el.dataset.target).getTime();
+    const diff=Math.floor((target-nowMs)/1000);
+    const card=el.closest('[data-exam-card]');
+    if(diff>0){
+      // Before exam
+      const d=Math.floor(diff/86400),h=Math.floor((diff%86400)/3600),m=Math.floor((diff%3600)/60),s=diff%60;
+      el.textContent=d>0?`${d}d ${h}h ${m}m ${s}s`:`${h}h ${m}m ${s}s`;
+      el.style.color='';
+      if(card)card.style.opacity='';
+    }else if(diff>=-3600){
+      // Exam started (within 1 hour)
+      el.textContent=ar()?'⏳ بدأ الاختبار':'⏳ Exam in progress';
+      el.style.color='var(--no)';
+      if(card)card.style.opacity='';
+    }else{
+      // Exam ended (more than 1 hour passed)
+      el.textContent=ar()?'✅ انتهى الاختبار':'✅ Exam ended';
+      el.style.color='var(--t3)';
+      if(card)card.style.opacity='.5';
+    }
+  });
+}
+setInterval(updateExamCountdowns,1000);
 
 /* INIT */
 async function init(){
