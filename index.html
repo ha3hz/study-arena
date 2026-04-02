@@ -985,14 +985,15 @@ function parseRT(str){
 }
 
 function updateExamCountdowns(){
-  const riyadhOffset=3*60*60*1000;
-  const utcNow=Date.now()+new Date().getTimezoneOffset()*60000;
-  const riyadhNow=utcNow+riyadhOffset;
+  // Get Riyadh time using reliable Intl method
+  const nowStr=new Date().toLocaleString('en-US',{timeZone:'Asia/Riyadh',hour12:false,hour:'2-digit',minute:'2-digit',second:'2-digit'});
+  const nowParts=nowStr.split(':');
+  const nowDateStr=new Date().toLocaleDateString('en-CA',{timeZone:'Asia/Riyadh'}); // YYYY-MM-DD
+  const riyadhNow=Date.UTC(+nowDateStr.split('-')[0],+nowDateStr.split('-')[1]-1,+nowDateStr.split('-')[2],+nowParts[0],+nowParts[1],+nowParts[2]);
 
   const clk=document.getElementById('liveClock');
   if(clk){
-    const rd=new Date(riyadhNow);
-    const hh=rd.getUTCHours(),mm=String(rd.getUTCMinutes()).padStart(2,'0'),ss=String(rd.getUTCSeconds()).padStart(2,'0');
+    const hh=parseInt(nowParts[0]),mm=nowParts[1],ss=nowParts[2];
     const ampm=hh>=12?(ar()?'م':'PM'):(ar()?'ص':'AM');
     const h12=hh%12||12;
     clk.textContent=`${h12}:${mm}:${ss} ${ampm}`;
