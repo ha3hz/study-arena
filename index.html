@@ -1009,7 +1009,17 @@ function updateExamCountdowns(){
 
     if(diffStart>0){
       const d=Math.floor(diffStart/86400),h=Math.floor((diffStart%86400)/3600),m=Math.floor((diffStart%3600)/60),s=diffStart%60;
-      el.textContent=d>0?`${d}d ${h}h ${m}m ${s}s`:`${h}h ${m}m ${s}s`;
+      if(ar()){
+        let txt='متبقي ';
+        if(d>0)txt+=d+' يوم و ';
+        txt+=h+' ساعة و '+m+' دقيقة و '+s+' ثانية';
+        el.textContent=txt;
+      }else{
+        let txt='';
+        if(d>0)txt+=d+'d '+h+'h '+m+'m '+s+'s';
+        else txt+=h+'h '+m+'m '+s+'s';
+        el.textContent=txt;
+      }
       el.style.color='';
       if(card)card.style.opacity='';
     }else if(diffEnd>0){
