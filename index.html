@@ -1101,11 +1101,9 @@ function updateExamCountdowns(){
     }else if(diffEnd>0){
       el.textContent=ar()?'⏳ بدأ الاختبار':'⏳ Exam in progress';
       el.style.color='var(--no)';
-      if(card)card.style.opacity='';
+      if(card){card.style.opacity='';card.style.display=''}
     }else{
-      el.textContent=ar()?'✅ انتهى الاختبار':'✅ Exam ended';
-      el.style.color='var(--t3)';
-      if(card)card.style.opacity='.5';
+      if(card)card.style.display='none';
     }
   });
 }
