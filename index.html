@@ -1106,6 +1106,14 @@ function updateExamCountdowns(){
       if(card)card.style.display='none';
     }
   });
+
+  // Hide day groups that have no visible exam cards
+  document.querySelectorAll('#exTableBody > div').forEach(group=>{
+    const cards=group.querySelectorAll('[data-exam-card]');
+    if(!cards.length)return;
+    const visible=[...cards].filter(c=>c.style.display!=='none');
+    group.style.display=visible.length>0?'':'none';
+  });
 }
 setInterval(updateExamCountdowns,1000);
 
